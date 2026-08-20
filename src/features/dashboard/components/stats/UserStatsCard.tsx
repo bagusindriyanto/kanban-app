@@ -3,7 +3,8 @@ import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 import { formatDuration } from '@/utils/formatDuration';
 import UserAvatar from '@/components/shared/UserAvatar';
-import type { UserStats } from '@/types/dashboard';
+import { TimerIcon } from 'lucide-react';
+import type { TimeMetric, UserStats } from '@/types/dashboard';
 
 const statItems = [
   {
@@ -34,10 +35,11 @@ const statItems = [
 
 type UserStatsCardProps = {
   user: UserStats;
+  timeMetric?: TimeMetric;
   className?: string;
 };
 
-const UserStatsCard = ({ user, className }: UserStatsCardProps) => {
+const UserStatsCard = ({ user, timeMetric, className }: UserStatsCardProps) => {
   // Calculate completion percentage
   const todo = user.todo ?? 0;
   const onProgress = user.on_progress ?? 0;
@@ -135,6 +137,39 @@ const UserStatsCard = ({ user, className }: UserStatsCardProps) => {
           </span>
         </div>
       </div>
+
+      {timeMetric ? (
+        <>
+          <Separator />
+
+          <div className="flex flex-col gap-1.5 pb-1.5">
+            <div className="flex items-center gap-1.5 pt-0.5 text-muted-foreground">
+              <TimerIcon className="size-3.5" />
+              <p className="text-xs font-semibold tracking-wide uppercase">
+                Rata-rata Waktu
+              </p>
+            </div>
+            <div className="flex items-center justify-between">
+              <p className="text-sm text-muted-foreground">Waktu Siklus</p>
+              <span className="text-sm font-bold tabular-nums">
+                {timeMetric.avg_cycle_minutes}
+              </span>
+            </div>
+            <div className="flex items-center justify-between">
+              <p className="text-sm text-muted-foreground">Waktu Mulai</p>
+              <span className="text-sm font-bold tabular-nums">
+                {timeMetric.avg_time_to_start_minutes}
+              </span>
+            </div>
+            <div className="flex items-center justify-between">
+              <p className="text-sm text-muted-foreground">Pause Ratio</p>
+              <span className="text-sm font-bold tabular-nums">
+                {timeMetric.pause_ratio}%
+              </span>
+            </div>
+          </div>
+        </>
+      ) : null}
     </Card>
   );
 };

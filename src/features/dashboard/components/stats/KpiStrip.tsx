@@ -5,18 +5,56 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import type { Dashboard } from '@/types/dashboard';
+import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
+import type { Comparison, Dashboard } from '@/types/dashboard';
 import {
+  ArrowDownRightIcon,
+  ArrowUpRightIcon,
   CircleCheckBigIcon,
   CircleDotIcon,
   LayoutListIcon,
   LoaderIcon,
+  MinusIcon,
 } from 'lucide-react';
+
+const DeltaBadge = ({ value }: { value: number | null | undefined }) => {
+  if (!value) {
+    return (
+      <Badge
+        variant="secondary"
+        className="gap-0.5 font-semibold text-muted-foreground tabular-nums"
+      >
+        <MinusIcon />
+        0%
+      </Badge>
+    );
+  }
+
+  const isPositive = value > 0;
+  return (
+    <Badge
+      variant="secondary"
+      className={cn(
+        'gap-0.5 font-semibold tabular-nums',
+        isPositive
+          ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300'
+          : 'bg-rose-50 text-rose-700 dark:bg-rose-950 dark:text-rose-300',
+      )}
+    >
+      {isPositive ? <ArrowUpRightIcon /> : <ArrowDownRightIcon />}
+      {isPositive ? '+' : ''}
+      {value}%
+    </Badge>
+  );
+};
 
 const KpiStrip = ({
   summary,
+  comparison,
 }: {
   summary: Dashboard['stats']['summary'] | undefined;
+  comparison: Comparison | undefined;
 }) => {
   return (
     <div className="overflow-hidden rounded-4xl bg-card shadow-xs ring-1 ring-foreground/10">
@@ -29,7 +67,7 @@ const KpiStrip = ({
             </CardAction>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl leading-none tracking-tight tabular-nums">
+            <p className="font-medium text-2xl leading-none tracking-tight tabular-nums">
               {summary?.todo ?? 0}
             </p>
           </CardContent>
@@ -45,7 +83,7 @@ const KpiStrip = ({
             </CardAction>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl leading-none tracking-tight tabular-nums">
+            <p className="font-medium text-2xl leading-none tracking-tight tabular-nums">
               {summary?.on_progress ?? 0}
             </p>
           </CardContent>
@@ -59,9 +97,12 @@ const KpiStrip = ({
             </CardAction>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl leading-none tracking-tight tabular-nums">
-              {summary?.done ?? 0}
-            </p>
+            <div className="flex items-center justify-between">
+              <p className="font-medium text-2xl leading-none tracking-tight tabular-nums">
+                {summary?.done ?? 0}
+              </p>
+              <DeltaBadge value={comparison?.deltas?.done} />
+            </div>
           </CardContent>
         </Card>
 
@@ -75,9 +116,12 @@ const KpiStrip = ({
             </CardAction>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl leading-none tracking-tight tabular-nums">
-              {summary?.total ?? 0}
-            </p>
+            <div className="flex items-center justify-between">
+              <p className="font-medium text-2xl leading-none tracking-tight tabular-nums">
+                {summary?.total ?? 0}
+              </p>
+              <DeltaBadge value={comparison?.deltas?.total} />
+            </div>
           </CardContent>
         </Card>
       </div>

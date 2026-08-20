@@ -59,7 +59,10 @@ const DashboardPage = () => {
         <ErrorBanner errorMessage={error.message} />
       ) : null}
       {/* KPI */}
-      <KpiStrip summary={data?.stats?.summary} />
+      <KpiStrip
+        summary={data?.stats?.summary}
+        comparison={data?.comparison}
+      />
       {/* User Stats */}
       <div className="my-6">
         <h3 className="mb-3 text-lg font-semibold tracking-tight">
@@ -77,6 +80,9 @@ const DashboardPage = () => {
                 <UserStatsCard
                   key={user.id}
                   user={user}
+                  timeMetric={data?.time_metrics?.users?.find(
+                    (tm) => tm.id === user.id,
+                  )}
                   className="w-[calc((100%-4*16px)/5)]"
                 />
               ))}

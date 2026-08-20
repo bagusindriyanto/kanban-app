@@ -263,6 +263,10 @@ export type Database = {
         Args: { p_division_id: number; p_from: string; p_to: string }
         Returns: Json
       }
+      _dashboard_get_comparison: {
+        Args: { p_division_id: number; p_from: string; p_to: string }
+        Returns: Json
+      }
       _dashboard_get_pie_chart: {
         Args: { p_division_id: number; p_from: string; p_to: string }
         Returns: Json
@@ -272,6 +276,14 @@ export type Database = {
         Returns: Json
       }
       _dashboard_get_table: {
+        Args: { p_division_id: number; p_from: string; p_to: string }
+        Returns: Json
+      }
+      _dashboard_get_time_metrics: {
+        Args: { p_division_id: number; p_from: string; p_to: string }
+        Returns: Json
+      }
+      _dashboard_period_summary: {
         Args: { p_division_id: number; p_from: string; p_to: string }
         Returns: Json
       }
