@@ -236,7 +236,103 @@ begin
 end;
 $function$;
 
--- 4) Extend get_dashboard_overview with the new sections
+-- 4) FTE: per-user + division full-time-equivalent from work_times (utilized)
+--    and task_effective_minute (productive). Baseline: Mon-Fri 450 min, Sat 300 min.
+create or replace function public._dashboard_get_fte(
+  p_division_id bigint,
+  p_from date,
+  p_to date
+)
+returns jsonb
+language plpgsql
+stable
+set search_path to ''
+as $function$
+declare
+  v_result jsonb;
+  v_mon_fri int;
+  v_sat int;
+  v_baseline bigint;
+begin
+  select
+    count(*) filter (where extract(isodow from d) < 6),
+    count(*) filter (where extract(isodow from d) = 6)
+  into v_mon_fri, v_sat
+  from generate_series(p_from, p_to, interval '1 day') d;
+
+  v_baseline := v_mon_fri * 450 + v_sat * 300;
+
+  with
+  division_users as (
+    select p.user_id as id, p.full_name, p.avatar
+    from public.profiles p
+    where p.division_id = p_division_id
+  ),
+  user_work as (
+    select w.user_id, sum(w.working_minute) as working_minute
+    from public.work_times w
+    where w.user_id in (select id from division_users)
+      and w.date between p_from and p_to
+    group by w.user_id
+  ),
+  user_effective as (
+    select
+      t.user_id,
+      sum(public.task_effective_minute(
+        t.status, t.timestamp_progress, t.pause_time, t.minute_pause, t.minute_activity
+      )) as effective_minute
+    from public.tasks t
+    where t.user_id in (select id from division_users)
+      and t.status <> 'todo'
+      and t.timestamp_progress::date between p_from and p_to
+    group by t.user_id
+  ),
+  per_user as (
+    select
+      u.id,
+      u.full_name,
+      u.avatar,
+      coalesce(w.working_minute, 0) as working_minute,
+      coalesce(e.effective_minute, 0) as effective_minute
+    from division_users u
+    left join user_work w on w.user_id = u.id
+    left join user_effective e on e.user_id = u.id
+  )
+  select jsonb_build_object(
+    'baseline_minutes', v_baseline,
+    'working_days', jsonb_build_object('mon_fri', v_mon_fri, 'saturday', v_sat),
+    'summary', (
+      select jsonb_build_object(
+        'utilized_fte', case when v_baseline > 0
+          then round(sum(working_minute)::numeric / v_baseline, 2) else 0 end,
+        'productive_fte', case when v_baseline > 0
+          then round(sum(effective_minute)::numeric / v_baseline, 2) else 0 end
+      )
+      from per_user
+    ),
+    'users', coalesce((
+      select jsonb_agg(jsonb_build_object(
+        'id', u.id,
+        'full_name', u.full_name,
+        'avatar', u.avatar,
+        'working_minute', u.working_minute,
+        'effective_minute', u.effective_minute,
+        'utilized_fte', case when v_baseline > 0
+          then round(u.working_minute::numeric / v_baseline, 2) else 0 end,
+        'productive_fte', case when v_baseline > 0
+          then round(u.effective_minute::numeric / v_baseline, 2) else 0 end
+      ) order by u.full_name)
+      from per_user u),
+      '[]'::jsonb
+    )
+  )
+  into v_result;
+
+  return v_result;
+end;
+$function$;
+
+-- 5) Extend get_dashboard_overview with the new sections
 create or replace function public.get_dashboard_overview(p_from_date date default null::date, p_to_date date default null::date)
  returns jsonb
  language plpgsql
@@ -276,13 +372,15 @@ begin
     'chart',    public._dashboard_get_chart(v_division_id, v_from, v_to),
     'pie_chart',  public._dashboard_get_pie_chart(v_division_id, v_from, v_to),
     'time_metrics', public._dashboard_get_time_metrics(v_division_id, v_from, v_to),
-    'comparison', public._dashboard_get_comparison(v_division_id, v_from, v_to)
+    'comparison', public._dashboard_get_comparison(v_division_id, v_from, v_to),
+    'fte', public._dashboard_get_fte(v_division_id, v_from, v_to)
   );
 end;$function$
 ;
 
--- 5) Revoke direct EXECUTE so anon/authenticated can only reach these
+-- 6) Revoke direct EXECUTE so anon/authenticated can only reach these
 --    through the SECURITY DEFINER get_dashboard_overview
 revoke execute on function public._dashboard_get_time_metrics(bigint, date, date) from public;
 revoke execute on function public._dashboard_period_summary(bigint, date, date) from public;
 revoke execute on function public._dashboard_get_comparison(bigint, date, date) from public;
+revoke execute on function public._dashboard_get_fte(bigint, date, date) from public;

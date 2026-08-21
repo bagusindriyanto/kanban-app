@@ -12,6 +12,7 @@ import { useDashboardFilters } from '@/features/dashboard/hooks/useDashboardFilt
 import OfflineBanner from '@/components/shared/OfflineBanner';
 import KpiStrip from '@/features/dashboard/components/stats/KpiStrip';
 import PieChartCard from '@/features/dashboard/components/pie-chart/PieChartCard';
+import FteSection from '@/features/dashboard/components/fte/FteSection';
 
 const DashboardPage = () => {
   const { dashboardFilters } = useDashboardFilters();
@@ -63,6 +64,8 @@ const DashboardPage = () => {
         summary={data?.stats?.summary}
         comparison={data?.comparison}
       />
+      {/* FTE */}
+      <FteSection data={data?.fte} />
       {/* User Stats */}
       <div className="my-6">
         <h3 className="mb-3 text-lg font-semibold tracking-tight">

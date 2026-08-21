@@ -6,5 +6,7 @@ export type {
   TimeMetric,
   TimeMetricsSummary,
   Comparison,
+  FteUser,
+  Fte,
   Dashboard,
 } from '@/features/dashboard/schemas/dashboardSchema';

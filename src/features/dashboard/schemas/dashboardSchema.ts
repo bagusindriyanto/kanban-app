@@ -96,6 +96,29 @@ const comparisonSchema = z.object({
   }),
 });
 
+const fteUserSchema = z.object({
+  id: z.string(),
+  full_name: z.string(),
+  avatar: z.string().nullable(),
+  working_minute: z.coerce.number(),
+  effective_minute: z.coerce.number(),
+  utilized_fte: z.coerce.number(),
+  productive_fte: z.coerce.number(),
+});
+
+const fteSchema = z.object({
+  baseline_minutes: z.coerce.number(),
+  working_days: z.object({
+    mon_fri: z.coerce.number(),
+    saturday: z.coerce.number(),
+  }),
+  summary: z.object({
+    utilized_fte: z.coerce.number(),
+    productive_fte: z.coerce.number(),
+  }),
+  users: z.array(fteUserSchema).default([]),
+});
+
 export const dashboardSchema = z.object({
   division: z.string().optional().default(''),
   stats: z.object({
@@ -160,6 +183,12 @@ export const dashboardSchema = z.object({
       working_minute: null,
     },
   }),
+  fte: fteSchema.default({
+    baseline_minutes: 0,
+    working_days: { mon_fri: 0, saturday: 0 },
+    summary: { utilized_fte: 0, productive_fte: 0 },
+    users: [],
+  }),
 });
 
 export type UserStats = z.infer<typeof userStatsSchema>;
@@ -169,4 +198,6 @@ export type PieChartData = z.infer<typeof pieChartDataSchema>;
 export type TimeMetric = z.infer<typeof timeMetricSchema>;
 export type TimeMetricsSummary = z.infer<typeof timeMetricsSummarySchema>;
 export type Comparison = z.infer<typeof comparisonSchema>;
+export type FteUser = z.infer<typeof fteUserSchema>;
+export type Fte = z.infer<typeof fteSchema>;
 export type Dashboard = z.infer<typeof dashboardSchema>;
