@@ -1,6 +1,6 @@
 import type { TaskStatus, TaskUpdate } from '@/types/task';
-import { formatToSQL } from './formatTimestamp';
-import { columns } from '@/config/column';
+import { formatToSQL } from '@/utils/formatTimestamp';
+import { columns } from '@/features/tasks/constants/column';
 import type { TaskWithProfile } from '@/features/tasks/api/query';
 
 const statusOrder = columns.map((column) => column.id);

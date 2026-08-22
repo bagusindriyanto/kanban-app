@@ -1,4 +1,4 @@
-import type { Column } from '@/config/column';
+import type { Column } from '../constants/column';
 import TaskCard from './card/TaskCard';
 import { cn } from '@/lib/utils';
 import { useDroppable } from '@dnd-kit/react';

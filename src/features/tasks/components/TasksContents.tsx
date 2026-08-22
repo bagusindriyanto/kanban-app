@@ -7,12 +7,12 @@ import {
   DragOverlay,
   type DragEndEvent,
 } from '@dnd-kit/react';
-import { columns } from '@/config/column';
+import { columns } from '../constants/column';
 import StatusColumn from './StatusColumn';
 import BoardStatsColumn from './BoardStatsColumn';
 import TaskCard from './card/TaskCard';
 import type { TaskStatus } from '@/types/task';
-import { computeStatusTransition } from '@/utils/statusTransition';
+import { computeStatusTransition } from '../utils/statusTransition';
 import { useUpdateTask } from '../api/updateTask';
 import { toast } from 'sonner';
 import type { TaskWithProfile } from '../api/query';
