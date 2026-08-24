@@ -25,6 +25,7 @@
     "@shadcnblocks": "https://shadcnblocks.com/r/{name}.json",
     "@fonttrio": "https://www.fonttrio.xyz/r/{name}.json",
     "@reui": "https://reui.io/r/{style}/{name}.json",
-    "@evilcharts": "https://evilcharts.com/r/{name}.json"
+    "@evilcharts": "https://evilcharts.com/r/{name}.json",
+    "@beui": "https://beui.dev/r/{name}.json"
   }
 }

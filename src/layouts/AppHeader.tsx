@@ -1,9 +1,9 @@
 import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
-import ModeToggle from '@/components/shared/ModeToggle';
 import UpcomingTasksPanel from '@/features/upcoming-tasks/components/UpcomingTasksPanel';
 import AppBreadcrumb from './AppBreadcrumb';
 import ChatbotDrawer from '@/features/ai/components/ChatbotDrawer';
+import { ThemeToggle } from '@/components/motion/theme-toggle';
 
 const AppHeader = () => {
   return (
@@ -16,7 +16,12 @@ const AppHeader = () => {
       <div className="flex gap-2 items-center">
         <ChatbotDrawer />
         <UpcomingTasksPanel />
-        <ModeToggle />
+        <ThemeToggle
+          variant="circle-blur"
+          start="top-right"
+          className="rounded-full border border-border bg-background p-2"
+          iconClassName="size-4"
+        />
       </div>
     </header>
   );
