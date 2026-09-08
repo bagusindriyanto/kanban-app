@@ -8,7 +8,7 @@ const defaultOpen = getCookie('sidebar_state') !== 'false'; // default true kala
 
 const AppLayout = () => {
   return (
-    <SidebarProvider defaultOpen={defaultOpen} className="overscroll-none">
+    <SidebarProvider defaultOpen={defaultOpen}>
       <AppSidebar />
       <SidebarInset className="[--dashboard-header-height:--spacing(12)] min-w-0 overflow-x-clip">
         <AppHeader />
