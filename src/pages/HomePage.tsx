@@ -27,10 +27,10 @@ const HomePage = () => {
   const isOnline = useOnlineStatus();
 
   return (
-    <div data-content-padding="false">
+    <div data-content-padding="false" className="overscroll-none">
       <div className="flex h-[calc(100dvh-var(--dashboard-header-height))] min-h-0 min-w-0 flex-col overflow-hidden">
         {/* Tasks Controls */}
-        <div className="flex shrink-0 gap-3 justify-between p-4">
+        <div className="flex gap-3 justify-between p-4 shrink-0">
           <h2 className="text-2xl font-bold tracking-tight">Tasks</h2>
           <TasksControls dataUpdatedAt={dataUpdatedAt} />
         </div>
