@@ -46,9 +46,9 @@ const WorktimeMenu = () => {
             <Button variant="secondary" size="icon-sm">
               <ClockIcon />
               {!isLoading && (!workTime || workTime.working_minute === 0) && (
-                <span className="absolute -right-0.5 -top-0.5 z-10 flex size-3">
+                <span className="absolute -right-0.5 -top-0.5 z-10 flex size-2.5">
                   <span className="inline-flex absolute bg-red-400 rounded-full opacity-75 animate-ping size-full"></span>
-                  <span className="inline-flex relative bg-red-500 rounded-full size-3"></span>
+                  <span className="inline-flex relative bg-red-500 rounded-full size-2.5"></span>
                 </span>
               )}
             </Button>
@@ -87,9 +87,9 @@ const WorktimeMenu = () => {
           <Button variant="secondary" size="icon-sm">
             <ClockIcon />
             {!isLoading && (!workTime || workTime.working_minute === 0) && (
-              <span className="absolute -right-0.5 -top-0.5 z-10 flex size-3">
+              <span className="absolute -right-0.5 -top-0.5 z-10 flex size-2.5">
                 <span className="inline-flex absolute bg-red-400 rounded-full opacity-75 animate-ping size-full"></span>
-                <span className="inline-flex relative bg-red-500 rounded-full size-3"></span>
+                <span className="inline-flex relative bg-red-500 rounded-full size-2.5"></span>
               </span>
             )}
           </Button>

@@ -27,7 +27,7 @@ const HomePage = () => {
   const isOnline = useOnlineStatus();
 
   return (
-    <div data-content-padding="false" className="overscroll-none">
+    <div data-content-padding="false">
       <div className="flex h-[calc(100dvh-var(--dashboard-header-height))] min-h-0 min-w-0 flex-col overflow-hidden">
         {/* Tasks Controls */}
         <div className="flex gap-3 justify-between p-4 shrink-0">
