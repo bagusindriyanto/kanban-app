@@ -48,7 +48,7 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
-  --font-sans: 'Geist Variable', sans-serif;
+  --font-sans: var(--font-geist);
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
@@ -83,9 +83,10 @@
   --font-heading: var(--font-bricolage-grotesque);
   --font-body: var(--font-geist);
   --font-mono: var(--font-geist-mono);
-  --font-bricolage-grotesque: Bricolage Grotesque Variable;
-  --font-geist: Geist Variable;
-  --font-geist-mono: Geist Mono Variable;
+  --font-bricolage-grotesque:
+    'Bricolage Grotesque Variable', system-ui, sans-serif;
+  --font-geist: 'Geist Variable', system-ui, sans-serif;
+  --font-geist-mono: 'Geist Mono Variable', ui-monospace, monospace;
 }
 
 :root {
