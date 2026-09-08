@@ -25,9 +25,11 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from '@/components/ui/drawer';
+import { useFetchWorkTime } from '../api/fetchWorkTime';
 
 const WorktimeMenu = () => {
   const isMobile = useIsMobile();
+  const { data: workTime, isLoading } = useFetchWorkTime();
 
   if (isMobile) {
     return (
@@ -36,11 +38,17 @@ const WorktimeMenu = () => {
           <TooltipTrigger
             render={
               <DrawerTrigger
-                render={<Button variant="secondary" size="icon-sm" />}
+                nativeButton={false}
+                render={<div className="relative w-fit" />}
               />
             }
           >
-            <ClockIcon />
+            <Button variant="secondary" size="icon-sm">
+              <ClockIcon />
+              {!isLoading && (!workTime || workTime.working_minute === 0) && (
+                <span className="bg-red-300 dark:bg-red-700 size-2 absolute -top-0.5 -right-0.5 rounded-full animate-pulse" />
+              )}
+            </Button>
           </TooltipTrigger>
           <TooltipContent>Jam Kerja</TooltipContent>
         </Tooltip>
@@ -50,7 +58,7 @@ const WorktimeMenu = () => {
             <DrawerDescription>Masukkan jam kerja hari ini.</DrawerDescription>
           </DrawerHeader>
           <div className="p-4">
-            <WorktimeInput />
+            <WorktimeInput workTime={workTime} isLoading={isLoading} />
           </div>
           <DrawerFooter>
             <DrawerClose render={<Button variant="outline" />}>
@@ -68,11 +76,17 @@ const WorktimeMenu = () => {
         <TooltipTrigger
           render={
             <PopoverTrigger
-              render={<Button variant="secondary" size="icon-sm" />}
+              nativeButton={false}
+              render={<div className="relative w-fit" />}
             />
           }
         >
-          <ClockIcon />
+          <Button variant="secondary" size="icon-sm">
+            <ClockIcon />
+            {!isLoading && (!workTime || workTime.working_minute === 0) && (
+              <span className="bg-red-300 dark:bg-red-700 size-3 absolute -top-0.5 -right-0.5 rounded-full animate-pulse" />
+            )}
+          </Button>
         </TooltipTrigger>
         <TooltipContent>Jam Kerja</TooltipContent>
       </Tooltip>
@@ -81,7 +95,7 @@ const WorktimeMenu = () => {
           <PopoverTitle>Jam Kerja</PopoverTitle>
           <PopoverDescription>Masukkan jam kerja hari ini.</PopoverDescription>
         </PopoverHeader>
-        <WorktimeInput />
+        <WorktimeInput workTime={workTime} isLoading={isLoading} />
       </PopoverContent>
     </Popover>
   );

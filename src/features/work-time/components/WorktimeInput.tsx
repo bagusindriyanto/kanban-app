@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
 import { format } from 'date-fns';
 import {
   NumberField,
@@ -8,12 +7,12 @@ import {
   NumberFieldIncrement,
   NumberFieldInput,
 } from '@/components/ui/number-field';
-import { useFetchWorkTime } from '../api/fetchWorkTime';
 import { useUpsertWorkTime } from '../api/upsertWorkTime';
 import useAuthStore from '@/stores/authStore';
 import { toast } from 'sonner';
 import { Spinner } from '@/components/ui/spinner';
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
+import type { WorkTime } from '@/types/workTime';
 
 const DEBOUNCE_MS = 500;
 const MAX_HOURS = 12;
@@ -22,6 +21,11 @@ const MAX_MINUTES = 59;
 type WorktimeFieldsProps = {
   initialHours: number | null;
   initialMinutes: number | null;
+};
+
+type WorktimeInputProps = {
+  workTime: WorkTime | null | undefined;
+  isLoading: boolean;
 };
 
 const WorktimeFields = ({
@@ -118,15 +122,9 @@ const WorktimeFields = ({
           max={MAX_HOURS}
         >
           <NumberFieldGroup>
+            <NumberFieldDecrement />
             <NumberFieldInput placeholder="-" />
-            <div className="bg-muted/30 rounded-r-full flex shrink-0 flex-col overflow-hidden">
-              <NumberFieldIncrement className="hover:bg-accent focus-visible:bg-accent flex h-3.5 w-full flex-1 shrink-0 items-center rounded-none! px-1.5 leading-none">
-                <ChevronUpIcon className="size-3.5" />
-              </NumberFieldIncrement>
-              <NumberFieldDecrement className="hover:bg-accent focus-visible:bg-accent flex h-3.5 w-full flex-1 shrink-0 items-center rounded-none! px-1.5 leading-none">
-                <ChevronDownIcon className="size-3.5" />
-              </NumberFieldDecrement>
-            </div>
+            <NumberFieldIncrement />
           </NumberFieldGroup>
         </NumberField>
       </Field>
@@ -142,15 +140,9 @@ const WorktimeFields = ({
           max={MAX_MINUTES}
         >
           <NumberFieldGroup>
+            <NumberFieldDecrement />
             <NumberFieldInput placeholder="-" />
-            <div className="bg-muted/30 rounded-r-full flex shrink-0 flex-col overflow-hidden">
-              <NumberFieldIncrement className="hover:bg-accent focus-visible:bg-accent flex h-3.5 w-full flex-1 shrink-0 items-center rounded-none! px-1.5 leading-none">
-                <ChevronUpIcon className="size-3.5" />
-              </NumberFieldIncrement>
-              <NumberFieldDecrement className="hover:bg-accent focus-visible:bg-accent flex h-3.5 w-full flex-1 shrink-0 items-center rounded-none! px-1.5 leading-none">
-                <ChevronDownIcon className="size-3.5" />
-              </NumberFieldDecrement>
-            </div>
+            <NumberFieldIncrement />
           </NumberFieldGroup>
         </NumberField>
       </Field>
@@ -158,12 +150,10 @@ const WorktimeFields = ({
   );
 };
 
-const WorktimeInput = () => {
-  const { data: workTime, isLoading } = useFetchWorkTime();
-
+const WorktimeInput = ({ workTime, isLoading }: WorktimeInputProps) => {
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center p-4">
+      <div className="flex justify-center items-center p-4">
         <Spinner className="size-4" />
       </div>
     );
