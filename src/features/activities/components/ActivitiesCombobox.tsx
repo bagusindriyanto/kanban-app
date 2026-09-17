@@ -12,12 +12,19 @@ import { Field, FieldError, FieldLabel } from '@/components/ui/field';
 import { Button } from '@/components/ui/button';
 import { useId } from 'react';
 import { Controller } from 'react-hook-form';
-import { PlusIcon } from 'lucide-react';
+import { ListXIcon, PlusIcon } from 'lucide-react';
 import { toast } from 'sonner';
 import { Spinner } from '@/components/ui/spinner';
-import type { ActivityInsert } from '@/types/activity';
+import { useFetchCurrentUser } from '@/features/users/api/fetchCurrentUser';
 import type { Control, FieldPath, FieldValues } from 'react-hook-form';
 import type { Activity } from '../api/query';
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from '@/components/ui/empty';
 
 type ActivitiesComboboxProps<
   TFieldValues extends FieldValues,
@@ -37,11 +44,19 @@ const ActivitiesCombobox = <
   className,
 }: ActivitiesComboboxProps<TFieldValues, TName>) => {
   const id = useId();
-  const { data: contents, isLoading } = useFetchActivities();
+  const { data: currentUser, isLoading: isLoadingCurrentUser } =
+    useFetchCurrentUser();
+  const divisionId = currentUser?.division_id ?? undefined;
+  const { data: contents, isLoading: isLoadingActivities } = useFetchActivities(
+    { divisionId },
+  );
   const { mutateAsync, isPending } = useAddActivity();
+  const isLoading = isLoadingCurrentUser || isLoadingActivities;
 
-  const onSubmit = (data: ActivityInsert) => {
-    toast.promise(mutateAsync(data), {
+  const onSubmit = (name: string) => {
+    if (!divisionId) return;
+
+    toast.promise(mutateAsync({ name, division_id: divisionId }), {
       loading: 'Sedang menambahkan aktivitas...',
       success: () => {
         return 'Aktivitas berhasil ditambahkan';
@@ -69,7 +84,7 @@ const ActivitiesCombobox = <
           <Field
             data-invalid={fieldState.invalid}
             className={className}
-            data-disabled={isLoading}
+            data-disabled={isLoading || !divisionId}
           >
             <FieldLabel htmlFor={id} className="gap-0.5">
               Aktivitas <span className="text-red-500">*</span>
@@ -90,35 +105,51 @@ const ActivitiesCombobox = <
                 id={id}
                 aria-invalid={fieldState.invalid}
                 placeholder="Cari atau buat aktivitas"
-                disabled={isLoading}
+                disabled={isLoading || !divisionId}
                 showClear
               />
               <ComboboxContent>
-                <ComboboxEmpty className="flex-col items-center justify-center gap-3 p-4">
-                  <span className="text-sm text-muted-foreground">
-                    &quot;{field.value}&quot; tidak ditemukan.
-                  </span>
-                  {field.value && (
-                    <Button
-                      type="button"
-                      size="sm"
-                      disabled={isPending}
-                      onClick={() => {
-                        onSubmit({ name: field.value });
-                      }}
-                    >
-                      {isPending ? (
-                        <>
-                          <Spinner data-icon="inline-start" />
-                          Menambahkan...
-                        </>
-                      ) : (
-                        <>
-                          <PlusIcon data-icon="inline-start" />
-                          Tambahkan Aktivitas
-                        </>
-                      )}
-                    </Button>
+                <ComboboxEmpty>
+                  {field.value.trim() ? (
+                    <div className="flex flex-col items-center justify-center gap-3 p-4">
+                      <p className="text-sm text-muted-foreground">
+                        &quot;{field.value.trim()}&quot; tidak ditemukan.
+                      </p>
+                      <Button
+                        type="button"
+                        size="sm"
+                        disabled={isPending || !divisionId}
+                        onClick={() => {
+                          onSubmit(field.value.trim());
+                        }}
+                      >
+                        {isPending ? (
+                          <>
+                            <Spinner data-icon="inline-start" />
+                            Menambahkan...
+                          </>
+                        ) : (
+                          <>
+                            <PlusIcon data-icon="inline-start" />
+                            Tambahkan Aktivitas
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                  ) : (
+                    <Empty className="py-6">
+                      <EmptyHeader>
+                        <EmptyMedia variant="icon">
+                          <ListXIcon />
+                        </EmptyMedia>
+                        <EmptyTitle className="text-foreground text-base">
+                          Daftar Aktivitas Kosong
+                        </EmptyTitle>
+                        <EmptyDescription>
+                          Silakan ketik aktivitas untuk menambahkannya.
+                        </EmptyDescription>
+                      </EmptyHeader>
+                    </Empty>
                   )}
                 </ComboboxEmpty>
                 <ComboboxList>

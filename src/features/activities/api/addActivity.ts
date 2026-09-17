@@ -4,10 +4,11 @@ import { supabase } from '@/lib/supabase';
 import type { ActivityInsert } from '@/types/activity';
 import { activityKeys } from './queryKeys';
 
-export const addActivity = async (data: ActivityInsert) => {
-  const { name } = data;
+export const addActivity = async ({ name, division_id }: ActivityInsert) => {
+  const { error } = await supabase
+    .from('activities')
+    .insert({ name, division_id });
 
-  const { error } = await supabase.from('activities').insert({ name });
   if (error) throw error;
 };
 
@@ -21,8 +22,10 @@ type UseAddActivityParams = {
 export const useAddActivity = (params: UseAddActivityParams = {}) => {
   return useMutation({
     mutationFn: addActivity,
-    onSuccess: (_data, _variables, _onMutateResult, context) => {
-      context.client.invalidateQueries({ queryKey: activityKeys.all });
+    onSuccess: (_data, variables, _onMutateResult, context) => {
+      context.client.invalidateQueries({
+        queryKey: activityKeys.byDivision(variables.division_id),
+      });
     },
     ...params.mutationConfig,
   });

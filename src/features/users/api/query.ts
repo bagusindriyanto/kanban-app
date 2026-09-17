@@ -19,6 +19,7 @@ export const currentUserQuery = (userId: string) =>
       full_name,
       avatar,
       nik,
+      division_id,
       role: roles (name)
       `,
     )
