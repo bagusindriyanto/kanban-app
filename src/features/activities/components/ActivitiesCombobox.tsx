@@ -143,7 +143,7 @@ const ActivitiesCombobox = <
                     </Empty>
                   )}
                 </ComboboxEmpty>
-                <ComboboxList>
+                <ComboboxList className="scroll-fade-y">
                   {(content: Activity) => (
                     <ComboboxItem key={content.name} value={content}>
                       {content.name}
@@ -154,12 +154,12 @@ const ActivitiesCombobox = <
                   <div className="flex justify-center px-1.5 pb-2">
                     <Button
                       type="button"
-                      variant="ghost"
+                      variant="secondary"
                       disabled={isPending || !divisionId}
                       onClick={() => {
                         onSubmit(activityName);
                       }}
-                      className="w-full hover:bg-primary dark:hover:bg-primary hover:text-primary-foreground duration-0"
+                      className="w-full hover:bg-primary dark:hover:bg-primary hover:text-primary-foreground"
                     >
                       {isPending ? (
                         <>

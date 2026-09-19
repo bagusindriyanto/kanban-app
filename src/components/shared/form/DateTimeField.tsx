@@ -81,10 +81,10 @@ type DateTimeFieldProps<
 > = {
   name: TName;
   control: Control<TFieldValues>;
+  side: 'left' | 'right' | 'top' | 'bottom' | 'inline-start' | 'inline-end';
   label?: string;
   required?: boolean;
   disabled?: boolean;
-  side?: 'left' | 'right' | 'top' | 'bottom' | 'inline-start' | 'inline-end';
   disabledDate?: 'after' | 'before';
   className?: string;
 };
@@ -95,10 +95,10 @@ const DateTimeField = <
 >({
   name,
   control,
+  side,
   label,
   required,
   disabled,
-  side = 'left',
   disabledDate = 'after',
   className,
 }: DateTimeFieldProps<TFieldValues, TName>) => {

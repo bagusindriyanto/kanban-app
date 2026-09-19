@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, useWatch } from 'react-hook-form';
 import { toast } from 'sonner';
-import { FieldGroup, FieldSet } from '@/components/ui/field';
+import { FieldGroup, FieldSeparator, FieldSet } from '@/components/ui/field';
 import { useFetchUsers } from '@/features/users/api/fetchUsers';
 import useAuthStore from '@/stores/authStore';
 import TextareaField from '@/components/shared/form/TextareaField';
@@ -9,7 +9,6 @@ import SwitchField from '@/components/shared/form/SwitchField';
 import DateTimeField from '@/components/shared/form/DateTimeField';
 import ComboboxField from '@/components/shared/form/ComboboxField';
 import { useAddTask } from '@/features/tasks/api/addTask';
-import { DialogClose, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
 import ActivitiesCombobox from '@/features/activities/components/ActivitiesCombobox';
@@ -19,11 +18,12 @@ import {
   type AddTaskFormInput,
 } from '../../schemas/addTaskSchema';
 
-const AddTaskForm = ({
-  onOpenChange,
-}: {
+type AddTaskFormProps = {
+  isMobile: boolean;
   onOpenChange: (open: boolean) => void;
-}) => {
+};
+
+const AddTaskForm = ({ isMobile, onOpenChange }: AddTaskFormProps) => {
   // Fetch Data
   const { data: users } = useFetchUsers();
   const { mutateAsync: addTaskMutate, isPending } = useAddTask();
@@ -84,15 +84,27 @@ const AddTaskForm = ({
   };
 
   return (
-    <>
-      <form id="add-task" onSubmit={form.handleSubmit(onSubmit)}>
+    <form
+      className="flex min-h-0 flex-1 flex-col"
+      onSubmit={form.handleSubmit(onSubmit)}
+    >
+      <div className="min-h-0 flex-1 overflow-y-auto px-4 mt-4 pb-2 md:-mx-4 md:mt-0">
         <FieldSet>
+          {isMobile && (
+            <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card mt-2">
+              Aktivitas
+            </FieldSeparator>
+          )}
           <FieldGroup>
             {/* Activity */}
             <ActivitiesCombobox name="content" control={form.control} />
           </FieldGroup>
-
-          <FieldGroup className="grid grid-cols-2 gap-4 min-h-17">
+          {isMobile && (
+            <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card mt-2">
+              Penugasan
+            </FieldSeparator>
+          )}
+          <FieldGroup className="grid grid-cols-1 sm:grid-cols-2 gap-4 min-h-17">
             {/* Assigned Switch */}
             <SwitchField
               name="is_assigned"
@@ -113,8 +125,12 @@ const AddTaskForm = ({
               placeholder="Pilih PIC"
             />
           </FieldGroup>
-
-          <FieldGroup className="grid grid-cols-2 gap-4 min-h-17">
+          {isMobile && (
+            <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card mt-2">
+              Jadwal
+            </FieldSeparator>
+          )}
+          <FieldGroup className="grid grid-cols-1 sm:grid-cols-2 gap-4 min-h-17">
             {/* Appointment Switch */}
             <SwitchField
               name="is_scheduled"
@@ -129,10 +145,15 @@ const AddTaskForm = ({
               label="Tanggal & Waktu Jadwal"
               required={isScheduled}
               disabled={!isScheduled}
-              side="right"
+              side={isMobile ? 'bottom' : 'right'}
               disabledDate="before"
             />
           </FieldGroup>
+          {isMobile && (
+            <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card mt-2">
+              Detail
+            </FieldSeparator>
+          )}
           {/* Detail */}
           <FieldGroup>
             <TextareaField
@@ -143,17 +164,22 @@ const AddTaskForm = ({
             />
           </FieldGroup>
         </FieldSet>
-      </form>
-      <DialogFooter>
-        <DialogClose render={<Button variant="outline" disabled={isPending} />}>
+      </div>
+      <div className="mt-4 grid grid-cols-2 shrink-0 gap-2 px-4 pb-4 md:mt-6 md:grid-cols-[1fr_auto] md:justify-items-end md:justify-end md:p-0">
+        <Button
+          type="button"
+          variant="outline"
+          disabled={isPending}
+          onClick={() => onOpenChange(false)}
+        >
           Batal
-        </DialogClose>
-        <Button type="submit" form="add-task" disabled={isPending}>
-          {isPending && <Spinner data-icon="inline-start" />}
-          {isPending ? 'Menambahkan...' : 'Tambah'}
         </Button>
-      </DialogFooter>
-    </>
+        <Button type="submit" disabled={isPending}>
+          {isPending && <Spinner data-icon="inline-start" />}
+          {isPending ? 'Tambah...' : 'Tambah'}
+        </Button>
+      </div>
+    </form>
   );
 };
 

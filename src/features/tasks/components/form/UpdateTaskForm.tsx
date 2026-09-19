@@ -3,7 +3,6 @@ import { useForm, useWatch } from 'react-hook-form';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { FieldGroup, FieldSeparator, FieldSet } from '@/components/ui/field';
-import { DialogFooter, DialogClose } from '@/components/ui/dialog';
 import { Spinner } from '@/components/ui/spinner';
 
 import { useFetchUsers } from '@/features/users/api/fetchUsers';
@@ -31,7 +30,12 @@ const statusItems = [
   { value: 'done', label: 'Done' },
 ];
 
-const UpdateTaskForm = () => {
+type UpdateTaskFormProps = {
+  isMobile: boolean;
+  onCancel: () => void;
+};
+
+const UpdateTaskForm = ({ isMobile, onCancel }: UpdateTaskFormProps) => {
   // Fetch data
   const { data: users } = useFetchUsers();
 
@@ -130,135 +134,142 @@ const UpdateTaskForm = () => {
 
   // Form
   return (
-    <>
-      <div className="max-h-[60vh] overflow-y-auto -mx-4 px-4 pb-2">
-        <form id="update-task" onSubmit={form.handleSubmit(onSubmit)}>
-          <FieldSet>
-            <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card mt-1">
-              Aktivitas & PIC
-            </FieldSeparator>
-            <FieldGroup className="grid grid-cols-2 gap-4">
-              {/* Activity */}
-              <ActivitiesCombobox name="content" control={form.control} />
-              {/* PIC Combo Box */}
-              <ComboboxField
-                name="user_id"
-                control={form.control}
-                label="PIC"
-                required
-                items={users}
-                valueKey="user_id"
-                labelKey="name"
-                placeholder="Pilih PIC"
-              />
-            </FieldGroup>
-            <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card mt-2">
-              Status & Waktu
-            </FieldSeparator>
-            <FieldGroup className="grid grid-cols-2 gap-4">
-              {/* Status */}
-              <SelectField
-                name="status"
-                control={form.control}
-                label="Status"
-                required
-                items={statusItems}
-                valueKey="value"
-                labelKey="label"
-                placeholder="Pilih status task"
-              />
-              {/* Timestamp Todo */}
-              <DateTimeField
-                name="timestamp_todo"
-                control={form.control}
-                label="Timestamp To Do"
-                required
-                side="right"
-              />
-              {/* Timestamp On Progress */}
-              <DateTimeField
-                name="timestamp_progress"
-                control={form.control}
-                label="Timestamp On Progress"
-                required={statusInput !== 'todo'}
-                disabled={statusInput === 'todo'}
-              />
-              {/* Timestamp Done */}
-              <DateTimeField
-                name="timestamp_done"
-                control={form.control}
-                label="Timestamp Done"
-                required={statusInput === 'done'}
-                disabled={statusInput !== 'done'}
-                side="right"
-              />
-            </FieldGroup>
-            <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card mt-2">
-              Kondisi Pause
-            </FieldSeparator>
-            <FieldGroup className="grid grid-cols-2 gap-4">
-              {/* Pause Time */}
-              <SwitchField
-                name="pause_time"
-                control={form.control}
-                label="Pause aktivitas sekarang?"
-                disabled={statusInput !== 'on progress'}
-              />
-              {/* Minute Pause */}
-              <NumberInputField
-                name="minute_pause"
-                control={form.control}
-                label="Durasi Pause (menit)"
-                min={0}
-                disabled={statusInput === 'todo'}
-              />
-            </FieldGroup>
-            <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card mt-2">
-              Jadwal
-            </FieldSeparator>
-            <FieldGroup className="grid grid-cols-2 gap-4 min-h-17">
-              {/* Appointment Switch */}
-              <SwitchField
-                name="is_scheduled"
-                control={form.control}
-                label="Jadwalkan Task?"
-              />
-              {/* Appointment Date */}
-              <DateTimeField
-                name="scheduled_at"
-                control={form.control}
-                label="Tanggal & Waktu Jadwal"
-                required={isScheduled}
-                disabled={!isScheduled}
-                side="right"
-                disabledDate="before"
-              />
-            </FieldGroup>
-            <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card mt-2">
-              Detail
-            </FieldSeparator>
-            <FieldGroup>
-              {/* Detail */}
-              <TextareaField
-                name="detail"
-                control={form.control}
-                label="Detail"
-                placeholder="Detail task"
-              />
-            </FieldGroup>
-          </FieldSet>
-        </form>
+    <form
+      className="flex min-h-0 flex-1 flex-col"
+      onSubmit={form.handleSubmit(onSubmit)}
+    >
+      <div className="min-h-0 flex-1 overflow-y-auto px-4 mt-4 pb-2 md:-mx-4 md:mt-0">
+        <FieldSet>
+          <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card mt-1">
+            Aktivitas & PIC
+          </FieldSeparator>
+          <FieldGroup className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {/* Activity */}
+            <ActivitiesCombobox name="content" control={form.control} />
+            {/* PIC Combo Box */}
+            <ComboboxField
+              name="user_id"
+              control={form.control}
+              label="PIC"
+              required
+              items={users}
+              valueKey="user_id"
+              labelKey="name"
+              placeholder="Pilih PIC"
+            />
+          </FieldGroup>
+          <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card mt-2">
+            Status & Waktu
+          </FieldSeparator>
+          <FieldGroup className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {/* Status */}
+            <SelectField
+              name="status"
+              control={form.control}
+              label="Status"
+              required
+              items={statusItems}
+              valueKey="value"
+              labelKey="label"
+              placeholder="Pilih status task"
+            />
+            {/* Timestamp Todo */}
+            <DateTimeField
+              name="timestamp_todo"
+              control={form.control}
+              label="Timestamp To Do"
+              required
+              side={isMobile ? 'bottom' : 'right'}
+            />
+            {/* Timestamp On Progress */}
+            <DateTimeField
+              name="timestamp_progress"
+              control={form.control}
+              label="Timestamp On Progress"
+              required={statusInput !== 'todo'}
+              disabled={statusInput === 'todo'}
+              side={isMobile ? 'bottom' : 'left'}
+            />
+            {/* Timestamp Done */}
+            <DateTimeField
+              name="timestamp_done"
+              control={form.control}
+              label="Timestamp Done"
+              required={statusInput === 'done'}
+              disabled={statusInput !== 'done'}
+              side={isMobile ? 'bottom' : 'right'}
+            />
+          </FieldGroup>
+          <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card mt-2">
+            Kondisi Pause
+          </FieldSeparator>
+          <FieldGroup className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {/* Pause Time */}
+            <SwitchField
+              name="pause_time"
+              control={form.control}
+              label="Pause aktivitas sekarang?"
+              disabled={statusInput !== 'on progress'}
+            />
+            {/* Minute Pause */}
+            <NumberInputField
+              name="minute_pause"
+              control={form.control}
+              label="Durasi Pause (menit)"
+              min={0}
+              disabled={statusInput === 'todo'}
+            />
+          </FieldGroup>
+          <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card mt-2">
+            Jadwal
+          </FieldSeparator>
+          <FieldGroup className="grid min-h-17 grid-cols-1 gap-4 sm:grid-cols-2">
+            {/* Appointment Switch */}
+            <SwitchField
+              name="is_scheduled"
+              control={form.control}
+              label="Jadwalkan Task?"
+            />
+            {/* Appointment Date */}
+            <DateTimeField
+              name="scheduled_at"
+              control={form.control}
+              label="Tanggal & Waktu Jadwal"
+              required={isScheduled}
+              disabled={!isScheduled}
+              side="right"
+              disabledDate="before"
+            />
+          </FieldGroup>
+          <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card mt-2">
+            Detail
+          </FieldSeparator>
+          <FieldGroup>
+            {/* Detail */}
+            <TextareaField
+              name="detail"
+              control={form.control}
+              label="Detail"
+              placeholder="Detail task"
+            />
+          </FieldGroup>
+        </FieldSet>
       </div>
-      <DialogFooter>
-        <DialogClose render={<Button variant="outline" disabled={isPending} />}>
+      <div className="mt-4 grid grid-cols-2 shrink-0 gap-2 px-4 pb-4 md:mt-6 md:grid-cols-[1fr_auto] md:justify-items-end md:justify-end md:p-0">
+        <Button
+          type="button"
+          variant="outline"
+          disabled={isPending}
+          onClick={onCancel}
+        >
           Batal
-        </DialogClose>
-        <Button type="submit" form="update-task" disabled={isPending}>
+        </Button>
+        <Button type="submit" disabled={isPending}>
           {isPending && <Spinner data-icon="inline-start" />}
           {isPending ? 'Memperbarui...' : 'Edit'}
         </Button>
-      </DialogFooter>
-    </>
+      </div>
+    </form>
   );
 };
 
