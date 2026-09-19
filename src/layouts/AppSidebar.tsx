@@ -12,7 +12,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import AccountMenu from '@/features/auth/components/UserMenu';
+import UserMenu from '@/features/auth/components/UserMenu';
 import logo from '@/assets/logo.png';
 import {
   SquareKanbanIcon,
@@ -99,7 +99,7 @@ const AppSidebar = () => {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-        <AccountMenu />
+        <UserMenu />
       </SidebarFooter>
     </Sidebar>
   );
