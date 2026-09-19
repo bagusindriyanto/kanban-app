@@ -75,6 +75,19 @@ const ActivitiesCombobox = <
       name={name}
       control={control}
       render={({ field, fieldState }) => {
+        const rawActivityName = String(field.value ?? '').trim();
+        const activityName =
+          rawActivityName.charAt(0).toLocaleUpperCase() +
+          rawActivityName.slice(1);
+
+        const canCreateActivity =
+          activityName.length > 0 &&
+          !contents?.some(
+            (content) =>
+              content.name.trim().toLocaleLowerCase() ===
+              activityName.toLocaleLowerCase(),
+          );
+
         const selectedContent =
           contents?.find(
             (content) => String(content.name) === String(field.value),
@@ -110,32 +123,10 @@ const ActivitiesCombobox = <
               />
               <ComboboxContent>
                 <ComboboxEmpty>
-                  {field.value.trim() ? (
-                    <div className="flex flex-col items-center justify-center gap-3 p-4">
-                      <p className="text-sm text-muted-foreground">
-                        &quot;{field.value.trim()}&quot; tidak ditemukan.
-                      </p>
-                      <Button
-                        type="button"
-                        size="sm"
-                        disabled={isPending || !divisionId}
-                        onClick={() => {
-                          onSubmit(field.value.trim());
-                        }}
-                      >
-                        {isPending ? (
-                          <>
-                            <Spinner data-icon="inline-start" />
-                            Menambahkan...
-                          </>
-                        ) : (
-                          <>
-                            <PlusIcon data-icon="inline-start" />
-                            Tambahkan Aktivitas
-                          </>
-                        )}
-                      </Button>
-                    </div>
+                  {activityName ? (
+                    <p className="px-4">
+                      &quot;{activityName}&quot; tidak ditemukan.
+                    </p>
                   ) : (
                     <Empty className="py-6">
                       <EmptyHeader>
@@ -159,6 +150,31 @@ const ActivitiesCombobox = <
                     </ComboboxItem>
                   )}
                 </ComboboxList>
+                {canCreateActivity && (
+                  <div className="flex justify-center px-1.5 pb-2">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      disabled={isPending || !divisionId}
+                      onClick={() => {
+                        onSubmit(activityName);
+                      }}
+                      className="w-full hover:bg-primary dark:hover:bg-primary hover:text-primary-foreground duration-0"
+                    >
+                      {isPending ? (
+                        <>
+                          <Spinner data-icon="inline-start" />
+                          Menambahkan...
+                        </>
+                      ) : (
+                        <>
+                          <PlusIcon data-icon="inline-start" />
+                          Tambahkan &quot;{activityName}&quot;
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                )}
               </ComboboxContent>
             </Combobox>
             {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
