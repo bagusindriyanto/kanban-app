@@ -34,7 +34,7 @@ const AddTaskForm = ({ isMobile, onOpenChange }: AddTaskFormProps) => {
     return user.user_id !== currentUser.id;
   });
 
-  const form = useForm({
+  const form = useForm<AddTaskFormInput>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       content: '',

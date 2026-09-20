@@ -31,7 +31,7 @@ const AddTaskModal = () => {
           <PlusIcon data-icon="inline-start" />
           Tambah Task
         </DrawerTrigger>
-        <DrawerContent className="max-h-[calc(100dvh-10rem)]">
+        <DrawerContent className="max-h-[calc(100dvh-1rem)]">
           <DrawerHeader>
             <DrawerTitle>Tambah Task</DrawerTitle>
             <DrawerDescription>Buat task baru.</DrawerDescription>

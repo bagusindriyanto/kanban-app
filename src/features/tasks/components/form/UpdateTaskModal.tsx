@@ -30,7 +30,7 @@ const UpdateTaskModal = () => {
         onOpenChange={handleOpenChange}
         showSwipeHandle
       >
-        <DrawerContent className="h-[calc(100dvh-1rem)] max-h-[calc(100dvh-10rem)]">
+        <DrawerContent className="max-h-[calc(100dvh-1rem)]">
           <DrawerHeader>
             <DrawerTitle>Edit Task</DrawerTitle>
             <DrawerDescription>

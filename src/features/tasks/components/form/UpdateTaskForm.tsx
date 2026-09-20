@@ -50,7 +50,7 @@ const UpdateTaskForm = ({ isMobile, onCancel }: UpdateTaskFormProps) => {
   const currentUser = useAuthStore((state) => state.currentUser);
 
   // Set nilai awal form
-  const form = useForm({
+  const form = useForm<UpdateTaskFormInput>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       content: selectedTask?.content ?? '',

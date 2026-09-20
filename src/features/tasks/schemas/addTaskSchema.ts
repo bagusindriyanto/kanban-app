@@ -31,7 +31,7 @@ export const formSchema = baseSchema.superRefine((data, ctx) => {
   }
 });
 
-export type AddTaskFormInput = z.infer<typeof formSchema>;
+export type AddTaskFormInput = z.input<typeof formSchema>;
 
 export const submitSchema = baseSchema
   .omit({
@@ -47,4 +47,4 @@ export const submitSchema = baseSchema
     scheduled_at: formatToSQL(data.scheduled_at),
   }));
 
-export type AddTaskSubmitInput = z.infer<typeof submitSchema>;
+export type AddTaskSubmitInput = z.output<typeof submitSchema>;
