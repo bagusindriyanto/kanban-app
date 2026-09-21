@@ -4,7 +4,7 @@ import WorktimeMenu from '@/features/work-time/components/WorktimeMenu';
 import FilterUsers from '@/features/users/components/FilterUsers';
 import AddTaskModal from './form/AddTaskModal';
 import { Button } from '@/components/ui/button';
-import { FilterIcon } from 'lucide-react';
+import { ListFilterIcon } from 'lucide-react';
 import {
   Drawer,
   DrawerClose,
@@ -23,9 +23,8 @@ const TasksFilters = () => {
   if (isMobile) {
     return (
       <Drawer showSwipeHandle>
-        <DrawerTrigger render={<Button variant="secondary" />}>
-          <FilterIcon data-icon="inline-start" />
-          Filter
+        <DrawerTrigger render={<Button size="icon" variant="secondary" />}>
+          <ListFilterIcon />
         </DrawerTrigger>
         <DrawerContent>
           <DrawerHeader>
@@ -34,7 +33,7 @@ const TasksFilters = () => {
               Filter berdasarkan PIC atau tanggal tasks yang selesai.
             </DrawerDescription>
           </DrawerHeader>
-          <div className="p-4 grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-3 p-4">
             <FilterUsers className="w-full" />
             <FilterCalendar title="Filter Tasks yang Selesai" />
           </div>
@@ -58,7 +57,7 @@ const TasksFilters = () => {
 
 const TasksControls = ({ dataUpdatedAt }: { dataUpdatedAt: number }) => {
   return (
-    <div className="flex min-w-0 gap-2 flex-wrap items-center justify-end">
+    <div className="flex flex-wrap gap-2 justify-end items-center min-w-0">
       <WorktimeMenu />
       <RefreshToggle dataUpdatedAt={dataUpdatedAt} />
       <TasksFilters />

@@ -37,7 +37,7 @@ const StatusColumn = ({ title, columnId, tasks }: StatusColumnProps) => {
   return (
     <div
       className={cn(
-        'flex flex-col min-h-0 rounded-xl border shadow-sm border-border/70',
+        'flex flex-col size-full w-85 min-w-85 max-sm:w-full max-sm:min-w-full max-sm:snap-center rounded-2xl border shadow-sm border-border/70',
         {
           'bg-todo': title === 'To Do',
           'bg-progress': title === 'On Progress',

@@ -14,6 +14,7 @@ import {
 } from '@/stores/filterStore';
 import { useFetchUsers } from '../api/fetchUsers';
 import { cn } from '@/lib/utils';
+import UserAvatar from '@/components/shared/UserAvatar';
 
 const FilterUsers = ({ className }: { className?: string }) => {
   const { data: users } = useFetchUsers();
@@ -32,7 +33,7 @@ const FilterUsers = ({ className }: { className?: string }) => {
       value={selectedUserId}
       onValueChange={(val) => setSelectedUserId(val as SelectedUserId)}
     >
-      <SelectTrigger className={cn('w-37.5', className)} size="sm">
+      <SelectTrigger className={cn('w-40', className)} size="sm">
         <SelectValue placeholder="Pilih PIC">{selectedUserLabel}</SelectValue>
       </SelectTrigger>
       <SelectContent alignItemWithTrigger={false}>
@@ -41,7 +42,10 @@ const FilterUsers = ({ className }: { className?: string }) => {
           <SelectItem value={ALL_USER}>Semua PIC</SelectItem>
           {users?.map((user) => (
             <SelectItem value={user.user_id} key={user.user_id}>
-              {user.name}
+              <div className="flex items-center gap-2">
+                <UserAvatar size="sm" profile={user} />
+                <span>{user.name}</span>
+              </div>
             </SelectItem>
           ))}
         </SelectGroup>

@@ -90,20 +90,16 @@ const AddTaskForm = ({ isMobile, onOpenChange }: AddTaskFormProps) => {
     >
       <div className="min-h-0 flex-1 overflow-y-auto px-4 mt-4 pb-2 md:-mx-4 md:mt-0">
         <FieldSet>
-          {isMobile && (
-            <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card mt-2">
-              Aktivitas
-            </FieldSeparator>
-          )}
+          <FieldSeparator className="md:hidden *:data-[slot=field-separator-content]:bg-card mt-2">
+            Aktivitas
+          </FieldSeparator>
           <FieldGroup>
             {/* Activity */}
             <ActivitiesCombobox name="content" control={form.control} />
           </FieldGroup>
-          {isMobile && (
-            <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card mt-2">
-              Penugasan
-            </FieldSeparator>
-          )}
+          <FieldSeparator className="md:hidden *:data-[slot=field-separator-content]:bg-card mt-2">
+            Penugasan
+          </FieldSeparator>
           <FieldGroup className="grid grid-cols-1 sm:grid-cols-2 gap-4 min-h-17">
             {/* Assigned Switch */}
             <SwitchField
@@ -125,11 +121,9 @@ const AddTaskForm = ({ isMobile, onOpenChange }: AddTaskFormProps) => {
               placeholder="Pilih PIC"
             />
           </FieldGroup>
-          {isMobile && (
-            <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card mt-2">
-              Jadwal
-            </FieldSeparator>
-          )}
+          <FieldSeparator className="md:hidden *:data-[slot=field-separator-content]:bg-card mt-2">
+            Jadwal
+          </FieldSeparator>
           <FieldGroup className="grid grid-cols-1 sm:grid-cols-2 gap-4 min-h-17">
             {/* Appointment Switch */}
             <SwitchField
@@ -149,11 +143,9 @@ const AddTaskForm = ({ isMobile, onOpenChange }: AddTaskFormProps) => {
               disabledDate="before"
             />
           </FieldGroup>
-          {isMobile && (
-            <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card mt-2">
-              Detail
-            </FieldSeparator>
-          )}
+          <FieldSeparator className="md:hidden *:data-[slot=field-separator-content]:bg-card mt-2">
+            Detail
+          </FieldSeparator>
           {/* Detail */}
           <FieldGroup>
             <TextareaField

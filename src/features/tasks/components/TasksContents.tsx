@@ -80,18 +80,16 @@ const TasksContents = ({
 
   return (
     <DragDropProvider onDragEnd={handleDragEnd}>
-      <div className="min-h-0 min-w-0 flex-1 overflow-x-auto overflow-y-hidden px-4 pb-4 scroll-fade-x">
-        <div className="inline-grid h-full min-w-full grid-cols-[repeat(4,minmax(20rem,1fr))] gap-4">
-          {columns.map((column) => (
-            <StatusColumn
-              key={column.id}
-              columnId={column.id}
-              title={column.title}
-              tasks={tasks.filter((task) => task.status === column.id)}
-            />
-          ))}
-          <BoardStatsColumn tasks={tasks} />
-        </div>
+      <div className="flex overflow-x-auto overflow-y-hidden flex-1 gap-4 pb-4 mx-4 min-w-0 min-h-0 max-sm:snap-x max-sm:snap-mandatory">
+        {columns.map((column) => (
+          <StatusColumn
+            key={column.id}
+            columnId={column.id}
+            title={column.title}
+            tasks={tasks.filter((task) => task.status === column.id)}
+          />
+        ))}
+        <BoardStatsColumn tasks={tasks} />
       </div>
       <DragOverlay>
         {(source) => {

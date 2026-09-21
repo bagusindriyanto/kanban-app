@@ -27,9 +27,8 @@ const AddTaskModal = () => {
   if (isMobile) {
     return (
       <Drawer open={open} onOpenChange={setOpen} showSwipeHandle>
-        <DrawerTrigger render={<Button />}>
-          <PlusIcon data-icon="inline-start" />
-          Tambah Task
+        <DrawerTrigger render={<Button size="icon" />}>
+          <PlusIcon />
         </DrawerTrigger>
         <DrawerContent className="max-h-[calc(100dvh-1rem)]">
           <DrawerHeader>
