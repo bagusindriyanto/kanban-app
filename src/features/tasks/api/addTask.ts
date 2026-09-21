@@ -5,6 +5,7 @@ import type { TaskInsert } from '@/types/task';
 import { taskKeys, type TaskKeys } from './queryKeys';
 import type { TaskWithProfile } from './query';
 import { userKeys } from '@/features/users/api/queryKeys';
+import { scheduleTaskKeys } from '@/features/schedules/api/queryKeys';
 import type { User } from '@/features/users/api/query';
 
 export const addTask = async (payload: TaskInsert) => {
@@ -94,6 +95,7 @@ export const useAddTask = ({ mutationConfig }: UseAddTaskParams = {}) => {
 
     onSettled: (_data, _error, _variables, _onMutateResult, context) => {
       context.client.invalidateQueries({ queryKey: taskKeys.all });
+      context.client.invalidateQueries({ queryKey: scheduleTaskKeys.all });
     },
 
     ...mutationConfig,

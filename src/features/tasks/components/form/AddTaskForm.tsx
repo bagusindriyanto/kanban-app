@@ -21,9 +21,14 @@ import {
 type AddTaskFormProps = {
   isMobile: boolean;
   onOpenChange: (open: boolean) => void;
+  defaultScheduled?: boolean;
 };
 
-const AddTaskForm = ({ isMobile, onOpenChange }: AddTaskFormProps) => {
+const AddTaskForm = ({
+  isMobile,
+  onOpenChange,
+  defaultScheduled = false,
+}: AddTaskFormProps) => {
   // Fetch Data
   const { data: users } = useFetchUsers();
   const { mutateAsync: addTaskMutate, isPending } = useAddTask();
@@ -40,7 +45,7 @@ const AddTaskForm = ({ isMobile, onOpenChange }: AddTaskFormProps) => {
       content: '',
       user_id: null,
       detail: '',
-      is_scheduled: false,
+      is_scheduled: defaultScheduled,
       is_assigned: false,
       scheduled_at: undefined,
     },
@@ -137,6 +142,7 @@ const AddTaskForm = ({ isMobile, onOpenChange }: AddTaskFormProps) => {
               control={form.control}
               label="Jadwalkan Task?"
               className="mt-6"
+              disabled={defaultScheduled}
             />
             {/* Appointment Date */}
             <DateTimeField

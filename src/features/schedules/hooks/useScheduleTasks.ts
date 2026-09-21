@@ -1,0 +1,69 @@
+import { useState } from 'react';
+import type { EventClickInfo, EventInput } from '@fullcalendar/react';
+import { isBefore, isToday } from 'date-fns';
+import useAuthStore from '@/stores/authStore';
+import useModalStore from '@/stores/modalStore';
+import { useFetchScheduleTasks } from '../api/fetchScheduleTasks';
+import type { ScheduleScope, ScheduleStatus } from '../api/query';
+import { statusColors } from '../constants/calendar';
+
+export const useScheduleTasks = ({
+  start,
+  end,
+}: {
+  start: string;
+  end: string;
+}) => {
+  const currentUser = useAuthStore((state) => state.currentUser);
+  const setUpdateOpen = useModalStore((state) => state.setUpdateOpen);
+  const [scope, setScope] = useState<ScheduleScope>('all');
+  const [status, setStatus] = useState<ScheduleStatus>('active');
+  const { data: tasks = [], error } = useFetchScheduleTasks({
+    filters: {
+      from: start,
+      to: end,
+      scope,
+      status,
+      userId: currentUser?.id ?? '',
+    },
+  });
+
+  const events = tasks.map(
+    (task): EventInput => ({
+      id: String(task.id),
+      title: task.content,
+      start: task.scheduled_at!,
+      interactive: true,
+      ...statusColors[task.status],
+    }),
+  );
+
+  const scheduledToday = tasks.filter(
+    (task) => task.scheduled_at && isToday(task.scheduled_at),
+  ).length;
+
+  const overdue = tasks.filter(
+    (task) =>
+      task.status !== 'done' &&
+      task.scheduled_at &&
+      isBefore(task.scheduled_at, new Date()),
+  ).length;
+
+  const handleEventClick = (info: EventClickInfo) => {
+    const task = tasks.find((item) => String(item.id) === info.event.id);
+    if (task) setUpdateOpen(true, task);
+  };
+
+  return {
+    scope,
+    setScope,
+    status,
+    setStatus,
+    events,
+    error,
+    taskCount: tasks.length,
+    scheduledToday,
+    overdue,
+    handleEventClick,
+  };
+};
