@@ -8,9 +8,11 @@ import type { ScheduleScope, ScheduleStatus } from '../api/query';
 import type { TaskStatus } from '@/types/task';
 
 export const views = [
+  { value: 'multiMonthYear', label: 'Tahun' },
   { value: 'dayGridMonth', label: 'Bulan' },
   { value: 'timeGridWeek', label: 'Minggu' },
   { value: 'timeGridDay', label: 'Hari' },
+  { value: 'listWeek', label: 'Daftar' },
 ];
 
 export const scopes: { value: ScheduleScope; label: string }[] = [

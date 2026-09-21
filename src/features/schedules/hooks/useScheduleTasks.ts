@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type { EventClickInfo, EventInput } from '@fullcalendar/react';
 import { isBefore, isToday } from 'date-fns';
 import useAuthStore from '@/stores/authStore';
-import useModalStore from '@/stores/modalStore';
+// import useModalStore from '@/stores/modalStore';
 import { useFetchScheduleTasks } from '../api/fetchScheduleTasks';
 import type { ScheduleScope, ScheduleStatus } from '../api/query';
 import { statusColors } from '../constants/calendar';
@@ -15,7 +15,6 @@ export const useScheduleTasks = ({
   end: string;
 }) => {
   const currentUser = useAuthStore((state) => state.currentUser);
-  const setUpdateOpen = useModalStore((state) => state.setUpdateOpen);
   const [scope, setScope] = useState<ScheduleScope>('all');
   const [status, setStatus] = useState<ScheduleStatus>('active');
   const { data: tasks = [], error } = useFetchScheduleTasks({
@@ -50,8 +49,9 @@ export const useScheduleTasks = ({
   ).length;
 
   const handleEventClick = (info: EventClickInfo) => {
-    const task = tasks.find((item) => String(item.id) === info.event.id);
-    if (task) setUpdateOpen(true, task);
+    console.log('Event clicked', info);
+    // const task = tasks.find((item) => String(item.id) === info.event.id);
+    // if (task) setUpdateOpen(true, task);
   };
 
   return {
