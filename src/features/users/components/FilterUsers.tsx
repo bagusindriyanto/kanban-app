@@ -42,10 +42,10 @@ const FilterUsers = ({ className }: { className?: string }) => {
           <SelectItem value={ALL_USER}>Semua PIC</SelectItem>
           {users?.map((user) => (
             <SelectItem value={user.user_id} key={user.user_id}>
-              <div className="flex items-center gap-2">
+              <span className="flex items-center gap-2">
                 <UserAvatar size="sm" profile={user} />
                 <span>{user.name}</span>
-              </div>
+              </span>
             </SelectItem>
           ))}
         </SelectGroup>

@@ -35,14 +35,28 @@ const ScheduleControls = ({
       items={views}
     >
       <SelectTrigger className="w-30">
-        <SelectValue />
+        <SelectValue>
+          {(value: string) => {
+            const selectedView = views.find((view) => view.value === value);
+            if (!selectedView) return value;
+
+            return (
+              <span className="flex items-center gap-2">
+                <selectedView.icon />
+                <span>{selectedView.label}</span>
+              </span>
+            );
+          }}
+        </SelectValue>
       </SelectTrigger>
       <SelectContent alignItemWithTrigger={false}>
         <SelectGroup>
           <SelectLabel>Mode Tampilan</SelectLabel>
           {views.map((view) => (
             <SelectItem key={view.value} value={view.value}>
-              {view.label}
+              <span className="flex items-center gap-2">
+                <view.icon /> <span>{view.label}</span>
+              </span>
             </SelectItem>
           ))}
         </SelectGroup>

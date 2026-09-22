@@ -44,18 +44,14 @@ const ScheduleCalendar = ({
 }: ScheduleCalendarProps) => (
   <EventCalendarViews
     height="100%"
+    weekNumbers
+    weekNumberCalculation="ISO"
+    weekTextShort="W"
     controller={controller}
     initialView={views[1].value}
     views={{
       dayGridMonth: {
         dayMaxEvents: 3,
-      },
-      listWeek: {
-        listItemEventClass:
-          'group rounded-full px-3 py-2 bg-(--fc-event-color) hover:bg-(--fc-event-color) mr-1',
-        listItemEventBeforeClass: 'hidden',
-        listItemEventInnerClass:
-          'flex items-center gap-2 text-sm text-(--fc-event-contrast-color)',
       },
     }}
     eventTimeFormat={{

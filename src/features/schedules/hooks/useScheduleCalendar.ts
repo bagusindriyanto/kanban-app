@@ -7,11 +7,17 @@ import {
   format,
   startOfMonth,
 } from 'date-fns';
-import { views } from '../constants/calendar';
+import { views, type View } from '../constants/calendar';
 
 export const useScheduleCalendar = () => {
   const controller = useCalendarController();
-  const [dateInfo, setDateInfo] = useState(() => {
+  const [dateInfo, setDateInfo] = useState<{
+    viewType: View;
+    title: string;
+    days: number;
+    start: string;
+    end: string;
+  }>(() => {
     const now = new Date();
     const start = startOfMonth(now);
 
@@ -26,7 +32,7 @@ export const useScheduleCalendar = () => {
 
   const handleDatesSet = (info: DatesSetInfo) => {
     setDateInfo({
-      viewType: info.view.type,
+      viewType: info.view.type as View,
       title: info.view.title,
       days: differenceInCalendarDays(
         info.view.currentEnd,

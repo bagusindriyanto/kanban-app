@@ -98,8 +98,10 @@ export function EventCalendarViews({
 
       listItemEventClass={(info) =>
         cn(
-          'items-center',
-          info.isSelected ? 'bg-foreground/5' : 'hover:bg-foreground/5',
+          'items-center transition-colors',
+          info.isSelected
+            ? 'bg-(--fc-event-color)'
+            : 'hover:bg-(--fc-event-color)/80',
         )
       }
       listItemEventBeforeClass="rounded-full border-(--fc-event-color)"
@@ -117,7 +119,7 @@ export function EventCalendarViews({
       }
       blockEventInnerClass="text-(--fc-event-contrast-color) print:text-black"
       blockEventTimeClass="whitespace-nowrap overflow-hidden"
-      blockEventTitleClass="whitespace-nowrap overflow-hidden"
+      blockEventTitleClass="truncate"
       /* Row Event
       ----------------------------------------------------------------------------------------- */
 
@@ -178,7 +180,7 @@ export function EventCalendarViews({
         cn('font-bold shrink-1', info.isNarrow ? 'ps-0.5' : 'ps-1')
       }
       rowEventTitleClass={(info) =>
-        cn('shrink-100', info.isNarrow ? 'px-0.5' : 'px-1')
+        cn('shrink-100 truncate', info.isNarrow ? 'px-0.5' : 'px-1')
       }
       /* Column Event
       ----------------------------------------------------------------------------------------- */
@@ -382,7 +384,7 @@ export function EventCalendarViews({
       }
       singleMonthHeaderInnerClass={(info) =>
         cn(
-          'px-3 py-1 rounded-full text-base font-bold',
+          'px-3 py-1 rounded-full text-base font-bold font-heading',
           info.hasNavLink && 'hover:bg-foreground/5',
         )
       }
@@ -429,7 +431,7 @@ export function EventCalendarViews({
           dayCellBottomClass: getShortDayCellBottomClass,
           tableBodyClass: (info) =>
             cn(
-              info.multiMonthColumns > 1 && 'border rounded-sm overflow-hidden',
+              info.multiMonthColumns > 1 && 'border rounded-lg overflow-hidden',
             ),
           dayHeaderInnerClass: (info) => cn(!info.inPopover && 'mb-2'),
           dayHeaderDividerClass: (info) =>
@@ -490,14 +492,15 @@ export function EventCalendarViews({
           /* List-View > List-Item Event
           ------------------------------------------------------------------------------------- */
 
-          listItemEventClass: 'group p-2 rounded-full gap-2',
-          listItemEventBeforeClass: 'mx-2 border-5',
-          listItemEventInnerClass: 'gap-2 text-sm',
-          listItemEventTimeClass:
-            'shrink-0 w-1/2 max-w-40 whitespace-nowrap overflow-hidden text-ellipsis',
+          listItemEventClass:
+            'group rounded-full px-3 py-2 bg-(--fc-event-color) mr-1 gap-2',
+          listItemEventBeforeClass: 'hidden',
+          listItemEventInnerClass:
+            'gap-2 text-sm text-(--fc-event-contrast-color)',
+          listItemEventTimeClass: 'shrink-0 w-1/4 max-w-40 truncate',
           listItemEventTitleClass: (info) =>
             cn(
-              'grow min-w-0 whitespace-nowrap overflow-hidden',
+              'grow min-w-0 truncate',
               info.event.url && 'group-hover:underline',
             ),
 

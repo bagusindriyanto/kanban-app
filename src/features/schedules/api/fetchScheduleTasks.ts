@@ -14,7 +14,6 @@ const fetchScheduleTasksQueryOptions = (filters: ScheduleFilters) =>
     queryKey: scheduleTaskKeys.filters(filters),
     queryFn: () => fetchScheduleTasks(filters),
     enabled: !!filters.userId,
-    placeholderData: (previousData) => previousData,
   });
 
 type UseFetchScheduleTasksParams = {
