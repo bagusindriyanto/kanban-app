@@ -29,7 +29,7 @@ const statusLabels: Record<TaskStatus, string> = {
   done: 'Done',
 };
 
-type ScheduleTaskDialogProps = {
+type ScheduleTaskModalProps = {
   task: ScheduleTask | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -39,7 +39,7 @@ const ScheduleTaskModal = ({
   task,
   open,
   onOpenChange,
-}: ScheduleTaskDialogProps) => {
+}: ScheduleTaskModalProps) => {
   if (!task) return null;
 
   const scheduledAt = task.scheduled_at
@@ -116,7 +116,6 @@ const ScheduleTaskModal = ({
                     <ItemContent>
                       <ItemTitle>{task.assigner.full_name}</ItemTitle>
                       <ItemDescription>
-                        Nama panggilan: {task.assigner.name} · Role:{' '}
                         {task.assigner.role?.name ?? '-'}
                       </ItemDescription>
                     </ItemContent>
