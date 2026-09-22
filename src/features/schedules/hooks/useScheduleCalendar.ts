@@ -16,7 +16,7 @@ export const useScheduleCalendar = () => {
     const start = startOfMonth(now);
 
     return {
-      viewType: views[0].value,
+      viewType: views[1].value,
       title: format(now, 'MMMM yyyy'),
       days: differenceInCalendarDays(endOfMonth(now), startOfMonth(now)) + 1,
       start: start.toISOString(),

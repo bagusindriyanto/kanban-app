@@ -7,6 +7,7 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
@@ -26,17 +27,6 @@ const ScheduleControls = ({
 }: ScheduleControlsProps) => (
   <div className="flex flex-wrap items-center gap-2">
     <ScheduleFilters {...filters} />
-    <ButtonGroup>
-      <Button size="icon" variant="outline" onClick={() => controller.prev()}>
-        <ChevronLeftIcon />
-      </Button>
-      <Button variant="outline" onClick={() => controller.today()}>
-        Hari ini
-      </Button>
-      <Button size="icon" variant="outline" onClick={() => controller.next()}>
-        <ChevronRightIcon />
-      </Button>
-    </ButtonGroup>
     <Select
       value={viewType}
       onValueChange={(value) => {
@@ -47,8 +37,9 @@ const ScheduleControls = ({
       <SelectTrigger className="w-30">
         <SelectValue />
       </SelectTrigger>
-      <SelectContent align="start" alignItemWithTrigger={false}>
+      <SelectContent alignItemWithTrigger={false}>
         <SelectGroup>
+          <SelectLabel>Mode Tampilan</SelectLabel>
           {views.map((view) => (
             <SelectItem key={view.value} value={view.value}>
               {view.label}
@@ -57,6 +48,17 @@ const ScheduleControls = ({
         </SelectGroup>
       </SelectContent>
     </Select>
+    <ButtonGroup>
+      <Button size="icon" variant="outline" onClick={() => controller.prev()}>
+        <ChevronLeftIcon />
+      </Button>
+      <Button variant="outline" onClick={() => controller.today()}>
+        Hari Ini
+      </Button>
+      <Button size="icon" variant="outline" onClick={() => controller.next()}>
+        <ChevronRightIcon />
+      </Button>
+    </ButtonGroup>
     <AddTaskModal defaultScheduled />
   </div>
 );

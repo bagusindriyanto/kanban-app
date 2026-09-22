@@ -33,12 +33,18 @@ export const statusColors: Record<
   TaskStatus,
   Pick<EventInput, 'color' | 'contrastColor'>
 > = {
-  todo: { color: 'var(--chart-1)', contrastColor: 'var(--primary-foreground)' },
-  'on progress': {
-    color: 'var(--chart-4)',
-    contrastColor: 'var(--primary-foreground)',
+  todo: {
+    color: 'var(--todo)',
+    contrastColor: 'var(--todo-foreground)',
   },
-  done: { color: 'var(--chart-2)', contrastColor: 'var(--primary-foreground)' },
+  'on progress': {
+    color: 'var(--progress)',
+    contrastColor: 'var(--progress-foreground)',
+  },
+  done: {
+    color: 'var(--done)',
+    contrastColor: 'var(--done-foreground)',
+  },
 };
 
 export const plugins = [

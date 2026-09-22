@@ -23,7 +23,17 @@ const ScheduleCalendar = ({
 }: ScheduleCalendarProps) => (
   <EventCalendarViews
     controller={controller}
-    initialView={views[0].value}
+    initialView={views[1].value}
+    views={{
+      dayGridMonth: {
+        dayMaxEvents: 3,
+      },
+    }}
+    eventTimeFormat={{
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: false,
+    }}
     plugins={[...plugins]}
     popoverCloseContent={() => (
       <XIcon className="size-5 text-muted-foreground group-hover:text-foreground" />

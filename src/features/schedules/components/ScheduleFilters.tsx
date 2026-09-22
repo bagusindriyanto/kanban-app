@@ -3,6 +3,7 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
@@ -33,8 +34,9 @@ const ScheduleFilters = ({
       <SelectTrigger className="w-full sm:w-50">
         <SelectValue />
       </SelectTrigger>
-      <SelectContent align="start" alignItemWithTrigger={false}>
+      <SelectContent alignItemWithTrigger={false}>
         <SelectGroup>
+          <SelectLabel>PIC</SelectLabel>
           {scopes.map((item) => (
             <SelectItem key={item.value} value={item.value}>
               {item.label}
@@ -53,8 +55,9 @@ const ScheduleFilters = ({
       <SelectTrigger className="w-full sm:w-40">
         <SelectValue />
       </SelectTrigger>
-      <SelectContent align="start" alignItemWithTrigger={false}>
+      <SelectContent alignItemWithTrigger={false}>
         <SelectGroup>
+          <SelectLabel>Status</SelectLabel>
           {statuses.map((item) => (
             <SelectItem key={item.value} value={item.value}>
               {item.label}
