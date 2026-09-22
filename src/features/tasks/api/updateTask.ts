@@ -5,6 +5,7 @@ import type { TaskUpdate } from '@/types/task';
 import { taskKeys, type TaskKeys } from './queryKeys';
 import type { TaskWithProfile } from './query';
 import { userKeys } from '@/features/users/api/queryKeys';
+import { scheduleTaskKeys } from '@/features/schedules/api/queryKeys';
 import type { User } from '@/features/users/api/query';
 
 export const updateTask = async (data: TaskUpdate) => {
@@ -118,6 +119,7 @@ export const useUpdateTask = ({
 
     onSettled: (_data, _error, _variables, _onMutateResult, context) => {
       context.client.invalidateQueries({ queryKey: taskKeys.all });
+      context.client.invalidateQueries({ queryKey: scheduleTaskKeys.all });
     },
 
     ...restMutationConfig,
