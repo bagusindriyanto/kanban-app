@@ -2,7 +2,6 @@ import { useState } from 'react';
 import type { EventClickInfo, EventInput } from '@fullcalendar/react';
 import { isBefore, isToday } from 'date-fns';
 import useAuthStore from '@/stores/authStore';
-// import useModalStore from '@/stores/modalStore';
 import { useFetchScheduleTasks } from '../api/fetchScheduleTasks';
 import type { ScheduleScope, ScheduleStatus } from '../api/query';
 import { statusColors } from '../constants/calendar';
@@ -16,7 +15,8 @@ export const useScheduleTasks = ({
 }) => {
   const currentUser = useAuthStore((state) => state.currentUser);
   const [scope, setScope] = useState<ScheduleScope>('all');
-  const [status, setStatus] = useState<ScheduleStatus>('active');
+  const [status, setStatus] = useState<ScheduleStatus>('all');
+  const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null);
   const { data: tasks = [], error } = useFetchScheduleTasks({
     filters: {
       from: start,
@@ -49,21 +49,37 @@ export const useScheduleTasks = ({
   ).length;
 
   const handleEventClick = (info: EventClickInfo) => {
-    console.log('Event clicked', info);
-    // const task = tasks.find((item) => String(item.id) === info.event.id);
-    // if (task) setUpdateOpen(true, task);
+    setSelectedTaskId(Number(info.event.id));
+  };
+
+  const selectedTask = tasks.find((task) => task.id === selectedTaskId) ?? null;
+
+  const handleTaskDialogOpenChange = (open: boolean) => {
+    if (!open) setSelectedTaskId(null);
+  };
+
+  const handleScopeChange = (value: ScheduleScope) => {
+    setSelectedTaskId(null);
+    setScope(value);
+  };
+
+  const handleStatusChange = (value: ScheduleStatus) => {
+    setSelectedTaskId(null);
+    setStatus(value);
   };
 
   return {
     scope,
-    setScope,
+    setScope: handleScopeChange,
     status,
-    setStatus,
+    setStatus: handleStatusChange,
     events,
     error,
     taskCount: tasks.length,
     scheduledToday,
     overdue,
+    selectedTask,
     handleEventClick,
+    handleTaskDialogOpenChange,
   };
 };

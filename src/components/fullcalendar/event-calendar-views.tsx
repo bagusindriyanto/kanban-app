@@ -52,7 +52,7 @@ const dayRowCommonClasses: CalendarOptions = {
 
   rowMoreLinkClass: (info) =>
     cn(
-      'mb-px border rounded-sm hover:bg-foreground/5',
+      'mb-px border rounded-full hover:bg-foreground/5',
       info.isNarrow ? 'mx-px border-primary' : 'mx-0.5 border-transparent',
     ),
   rowMoreLinkInnerClass: (info) =>
@@ -123,9 +123,9 @@ export function EventCalendarViews({
 
       rowEventClass={(info) =>
         cn(
-          'mb-px border-y',
-          info.isStart ? 'border-s rounded-s-sm' : !info.isNarrow && 'ms-2',
-          info.isEnd ? 'border-e rounded-e-sm' : !info.isNarrow && 'me-2',
+          'mb-1 border-y',
+          info.isStart ? 'border-s rounded-s-full' : !info.isNarrow && 'ms-2',
+          info.isEnd ? 'border-e rounded-e-full' : !info.isNarrow && 'me-2',
         )
       }
       rowEventBeforeClass={(info) =>
@@ -138,14 +138,15 @@ export function EventCalendarViews({
             ? 'absolute -start-2 w-2 -top-px -bottom-px'
             : ''
       }
-      rowEventBeforeContent={(info) =>
-        !info.isStart && !info.isNarrow ? (
-          filledRightTriangle(
-            'size-full rotate-180 [[dir=rtl]_&]:rotate-0 text-(--fc-event-color)',
-          )
-        ) : (
-          <></>
-        ) // HACK for React vdom
+      rowEventBeforeContent={
+        (info) =>
+          !info.isStart && !info.isNarrow ? (
+            filledRightTriangle(
+              'size-full rotate-180 [[dir=rtl]_&]:rotate-0 text-(--fc-event-color)',
+            )
+          ) : (
+            <></>
+          ) // HACK for React vdom
       }
       rowEventAfterClass={(info) =>
         info.isEndResizable
@@ -157,14 +158,15 @@ export function EventCalendarViews({
             ? 'absolute -end-2 w-2 -top-px -bottom-px'
             : ''
       }
-      rowEventAfterContent={(info) =>
-        !info.isEnd && !info.isNarrow ? (
-          filledRightTriangle(
-            'size-full [[dir=rtl]_&]:rotate-180 text-(--fc-event-color)',
-          )
-        ) : (
-          <></>
-        ) // HACK for React vdom
+      rowEventAfterContent={
+        (info) =>
+          !info.isEnd && !info.isNarrow ? (
+            filledRightTriangle(
+              'size-full [[dir=rtl]_&]:rotate-180 text-(--fc-event-color)',
+            )
+          ) : (
+            <></>
+          ) // HACK for React vdom
       }
       rowEventInnerClass={(info) =>
         cn(
@@ -185,8 +187,8 @@ export function EventCalendarViews({
       columnEventClass={(info) =>
         cn(
           'border-x ring ring-background',
-          info.isStart && 'border-t rounded-t-sm',
-          info.isEnd && 'mb-px border-b rounded-b-sm',
+          info.isStart && 'border-t rounded-t-xl',
+          info.isEnd && 'mb-px border-b rounded-b-xl',
         )
       }
       columnEventBeforeClass={(info) =>
@@ -318,7 +320,7 @@ export function EventCalendarViews({
       ----------------------------------------------------------------------------------------- */
 
       popoverFormat={{ day: 'numeric', weekday: 'short' }}
-      popoverClass="border rounded-md overflow-hidden shadow-lg m-1 bg-popover text-popover-foreground min-w-60"
+      popoverClass="border rounded-3xl overflow-hidden shadow-lg m-1 bg-popover text-popover-foreground min-w-60"
       popoverCloseClass="group absolute top-2 end-2 size-8 rounded-full items-center justify-center hover:bg-foreground/5 focus-visible:outline-3 outline-ring/50"
       /* Lane
       ----------------------------------------------------------------------------------------- */
@@ -488,7 +490,7 @@ export function EventCalendarViews({
           /* List-View > List-Item Event
           ------------------------------------------------------------------------------------- */
 
-          listItemEventClass: 'group p-2 rounded-s-full gap-2',
+          listItemEventClass: 'group p-2 rounded-full gap-2',
           listItemEventBeforeClass: 'mx-2 border-5',
           listItemEventInnerClass: 'gap-2 text-sm',
           listItemEventTimeClass:

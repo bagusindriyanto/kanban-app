@@ -19,8 +19,20 @@ export const scheduleTasksQuery = (filters: ScheduleFilters) => {
     .select(
       `
         *,
-        user:profiles!tasks_user_id_fkey (user_id, full_name, name, avatar),
-        assigner:profiles!tasks_assigner_id_fkey (name)
+        user:profiles!tasks_user_id_fkey (
+          user_id,
+          full_name,
+          name,
+          avatar,
+          role:roles (name)
+        ),
+        assigner:profiles!tasks_assigner_id_fkey (
+          user_id,
+          full_name,
+          name,
+          avatar,
+          role:roles (name)
+        )
       `,
     )
     .gte('scheduled_at', filters.from)
