@@ -174,7 +174,7 @@ const AddTaskForm = ({
         </Button>
         <Button type="submit" disabled={isPending}>
           {isPending && <Spinner data-icon="inline-start" />}
-          {isPending ? 'Tambah...' : 'Tambah'}
+          {isPending ? 'Menambahkan...' : 'Tambah'}
         </Button>
       </div>
     </form>
