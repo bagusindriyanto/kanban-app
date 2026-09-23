@@ -14,18 +14,22 @@ import {
 import AddTaskModal from '@/features/tasks/components/form/AddTaskModal';
 import ScheduleFilters, { type ScheduleFiltersProps } from './ScheduleFilters';
 import { views } from '../constants/calendar';
+import { RefreshToggle } from '@/components/shared/RefreshToggle';
 
 type ScheduleControlsProps = ScheduleFiltersProps & {
   controller: CalendarController;
   viewType: string;
+  dataUpdatedAt: number;
 };
 
 const ScheduleControls = ({
   controller,
   viewType,
+  dataUpdatedAt,
   ...filters
 }: ScheduleControlsProps) => (
   <div className="flex flex-wrap items-center gap-2">
+    <RefreshToggle dataUpdatedAt={dataUpdatedAt} />
     <ScheduleFilters {...filters} />
     <Select
       value={viewType}

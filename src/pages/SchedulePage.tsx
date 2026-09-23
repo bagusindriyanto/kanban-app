@@ -16,6 +16,8 @@ const SchedulePage = () => {
     setStatus,
     events,
     error,
+    isLoading,
+    dataUpdatedAt,
     taskCount,
     scheduledToday,
     overdue,
@@ -42,10 +44,16 @@ const SchedulePage = () => {
             <div className="font-medium text-lg leading-none">
               {dateInfo.title}
             </div>
-            <p className="text-muted-foreground text-sm">
-              {dateInfo.days} hari · {taskCount} jadwal · {scheduledToday} hari
-              ini · {overdue} terlewat
-            </p>
+            {isLoading ? (
+              <p className="text-muted-foreground text-sm shimmer">
+                Memuat jadwal...
+              </p>
+            ) : (
+              <p className="text-muted-foreground text-sm">
+                {dateInfo.days} hari · {taskCount} jadwal · {scheduledToday}{' '}
+                hari ini · {overdue} terlewat
+              </p>
+            )}
           </div>
 
           <ScheduleControls
@@ -55,12 +63,14 @@ const SchedulePage = () => {
             status={status}
             onScopeChange={setScope}
             onStatusChange={setStatus}
+            dataUpdatedAt={dataUpdatedAt}
           />
         </div>
         <div className="min-h-0 flex-1">
           <ScheduleCalendar
             controller={controller}
             events={events}
+            isLoading={isLoading}
             onEventClick={handleEventClick}
             onDatesSet={handleDatesSet}
           />

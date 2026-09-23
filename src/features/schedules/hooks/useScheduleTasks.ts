@@ -17,7 +17,12 @@ export const useScheduleTasks = ({
   const [scope, setScope] = useState<ScheduleScope>('all');
   const [status, setStatus] = useState<ScheduleStatus>('all');
   const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null);
-  const { data: tasks = [], error } = useFetchScheduleTasks({
+  const {
+    data: tasks = [],
+    error,
+    isLoading,
+    dataUpdatedAt,
+  } = useFetchScheduleTasks({
     filters: {
       from: start,
       to: end,
@@ -77,6 +82,8 @@ export const useScheduleTasks = ({
     setStatus: handleStatusChange,
     events,
     error,
+    isLoading,
+    dataUpdatedAt,
     taskCount: tasks.length,
     scheduledToday,
     overdue,
