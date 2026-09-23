@@ -1,6 +1,10 @@
 import { format } from 'date-fns';
 import { id as idLocale } from 'date-fns/locale';
-import { CalendarClockIcon } from 'lucide-react';
+import {
+  CalendarCheckIcon,
+  CalendarChevronsRightIcon,
+  CalendarClockIcon,
+} from 'lucide-react';
 import UserAvatar from '@/components/shared/UserAvatar';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -29,6 +33,13 @@ const statusLabels: Record<TaskStatus, string> = {
   done: 'Done',
 };
 
+const formatTimestamp = (timestamp: string | null) =>
+  timestamp
+    ? format(new Date(timestamp), "EEEE, d MMMM yyyy 'pukul' HH.mm", {
+        locale: idLocale,
+      })
+    : null;
+
 type ScheduleTaskModalProps = {
   task: ScheduleTask | null;
   open: boolean;
@@ -42,11 +53,9 @@ const ScheduleTaskModal = ({
 }: ScheduleTaskModalProps) => {
   if (!task) return null;
 
-  const scheduledAt = task.scheduled_at
-    ? format(new Date(task.scheduled_at), "EEEE, d MMMM yyyy 'pukul' HH.mm", {
-        locale: idLocale,
-      })
-    : '-';
+  const scheduledAt = formatTimestamp(task.scheduled_at);
+  const progressAt = formatTimestamp(task.timestamp_progress);
+  const doneAt = formatTimestamp(task.timestamp_done);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -78,14 +87,46 @@ const ScheduleTaskModal = ({
 
           <Separator />
 
-          <div className="flex items-center gap-3">
-            <CalendarClockIcon
-              className="size-5 shrink-0 text-muted-foreground"
-              aria-hidden="true"
-            />
-            <div className="flex min-w-0 flex-col gap-0.5">
-              <p className="text-xs text-muted-foreground">Jadwal</p>
-              <p className="font-medium tabular-nums">{scheduledAt}</p>
+          <div className="flex flex-col gap-3">
+            <div className="flex items-center gap-3">
+              <CalendarClockIcon
+                className="size-5 shrink-0 text-muted-foreground"
+                aria-hidden="true"
+              />
+              <div className="flex min-w-0 flex-col gap-0.5">
+                <p className="text-xs text-muted-foreground">Jadwal</p>
+                <p className="font-medium tabular-nums">
+                  {scheduledAt ?? 'Tidak dijadwalkan'}
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <CalendarChevronsRightIcon
+                className="size-5 shrink-0 text-muted-foreground"
+                aria-hidden="true"
+              />
+              <div className="flex min-w-0 flex-col gap-0.5">
+                <p className="text-xs text-muted-foreground">
+                  Mulai dikerjakan
+                </p>
+                <p className="font-medium tabular-nums">
+                  {progressAt ?? 'Belum dimulai'}
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <CalendarCheckIcon
+                className="size-5 shrink-0 text-muted-foreground"
+                aria-hidden="true"
+              />
+              <div className="flex min-w-0 flex-col gap-0.5">
+                <p className="text-xs text-muted-foreground">Selesai</p>
+                <p className="font-medium tabular-nums">
+                  {doneAt ?? 'Belum selesai'}
+                </p>
+              </div>
             </div>
           </div>
 
