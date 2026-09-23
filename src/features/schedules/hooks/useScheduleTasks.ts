@@ -31,7 +31,9 @@ export const useScheduleTasks = ({
     (task): EventInput => ({
       id: String(task.id),
       title: task.content,
-      start: task.scheduled_at!,
+      start:
+        task.status === 'todo' ? task.scheduled_at! : task.timestamp_progress!,
+      end: task.timestamp_done ?? undefined,
       interactive: true,
       ...statusColors[task.status],
     }),
