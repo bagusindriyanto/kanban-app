@@ -6,7 +6,6 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { cn } from '@/lib/utils';
 import type { Comparison, Dashboard } from '@/types/dashboard';
 import {
   ArrowDownRightIcon,
@@ -19,12 +18,17 @@ import {
 } from 'lucide-react';
 
 const DeltaBadge = ({ value }: { value: number | null | undefined }) => {
-  if (!value) {
+  if (value == null) {
     return (
-      <Badge
-        variant="secondary"
-        className="gap-0.5 font-semibold text-muted-foreground tabular-nums"
-      >
+      <Badge variant="secondary" title="Belum ada data periode sebelumnya">
+        —
+      </Badge>
+    );
+  }
+
+  if (value === 0) {
+    return (
+      <Badge variant="secondary" className="gap-0.5 tabular-nums">
         <MinusIcon />
         0%
       </Badge>
@@ -33,15 +37,7 @@ const DeltaBadge = ({ value }: { value: number | null | undefined }) => {
 
   const isPositive = value > 0;
   return (
-    <Badge
-      variant="secondary"
-      className={cn(
-        'gap-0.5 font-semibold tabular-nums',
-        isPositive
-          ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300'
-          : 'bg-rose-50 text-rose-700 dark:bg-rose-950 dark:text-rose-300',
-      )}
-    >
+    <Badge variant="secondary" className="gap-0.5 font-semibold tabular-nums">
       {isPositive ? <ArrowUpRightIcon /> : <ArrowDownRightIcon />}
       {isPositive ? '+' : ''}
       {value}%
@@ -61,7 +57,7 @@ const KpiStrip = ({
       <div className="grid divide-y *:data-[slot=card]:rounded-none *:data-[slot=card]:ring-0 md:grid-cols-2 md:divide-x md:divide-y-0 xl:grid-cols-4">
         <Card size="sm">
           <CardHeader>
-            <CardTitle className="font-normal text-sm">Total To Do</CardTitle>
+            <CardTitle className="font-normal text-sm">To Do</CardTitle>
             <CardAction>
               <CircleDotIcon className="size-4 text-muted-foreground" />
             </CardAction>
@@ -76,7 +72,7 @@ const KpiStrip = ({
         <Card size="sm">
           <CardHeader>
             <CardTitle className="font-normal text-sm">
-              Total On Progress
+              Dalam Proses
             </CardTitle>
             <CardAction>
               <LoaderIcon className="size-4 text-muted-foreground" />
@@ -91,7 +87,7 @@ const KpiStrip = ({
 
         <Card size="sm">
           <CardHeader>
-            <CardTitle className="font-normal text-sm">Total Done</CardTitle>
+            <CardTitle className="font-normal text-sm">Selesai</CardTitle>
             <CardAction>
               <CircleCheckBigIcon className="size-4 text-muted-foreground" />
             </CardAction>
@@ -109,7 +105,7 @@ const KpiStrip = ({
         <Card size="sm">
           <CardHeader>
             <CardTitle className="font-normal text-sm">
-              Total Aktivitas
+              Total Tugas
             </CardTitle>
             <CardAction>
               <LayoutListIcon className="size-4 text-muted-foreground" />

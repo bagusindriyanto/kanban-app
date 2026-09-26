@@ -62,9 +62,9 @@ const PieChartCard = ({ data }: { data: PieChartData[] | undefined }) => {
         {!data || data.length === 0 ? (
           <EmptyChartItem />
         ) : (
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid gap-4 md:grid-cols-2">
             {data.map(({ id, full_name, tasks }) => (
-              <div key={id} className="space-y-2">
+              <div key={id} className="flex min-w-0 flex-col gap-2">
                 <h2 className="font-semibold tracking-tight">{full_name}</h2>
                 <PieChartItem tasks={tasks} />
               </div>

@@ -1,4 +1,3 @@
-import { formatDuration } from '@/utils/formatDuration';
 import {
   Card,
   CardContent,
@@ -6,150 +5,90 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import {
-  Empty,
-  EmptyHeader,
-  EmptyMedia,
-  EmptyTitle,
-} from '@/components/ui/empty';
-import { BanIcon } from 'lucide-react';
-import type { ChartData } from '@/types/dashboard';
+import { Empty, EmptyHeader, EmptyTitle } from '@/components/ui/empty';
 import { EvilBarChart } from '@/components/evilcharts/charts/recharts-bar-chart';
+import { formatDuration } from '@/utils/formatDuration';
+import type { ChartData } from '@/types/dashboard';
 
-type ChartConfig = {
+const chartConfig = {
   effective_minute: {
-    label: 'Aktivitas';
-    colors: { light: string[]; dark: string[] };
-  };
+    label: 'Waktu aktivitas',
+    colors: { light: ['var(--chart-2)'], dark: ['var(--chart-2)'] },
+  },
   working_minute: {
-    label: 'Waktu Kerja';
-    colors: { light: string[]; dark: string[] };
-  };
-};
-
-const getChartConfig = (name: string): ChartConfig => {
-  if (!name) {
-    return {
-      effective_minute: {
-        label: 'Aktivitas',
-        colors: { light: ['hsl(0, 0%, 40%)'], dark: ['hsl(0, 0%, 40%)'] },
-      },
-      working_minute: {
-        label: 'Waktu Kerja',
-        colors: { light: ['hsl(0, 0%, 60%)'], dark: ['hsl(0, 0%, 60%)'] },
-      },
-    };
-  }
-
-  let hash = 0;
-  for (let i = 0; i < name.length; i++) {
-    hash = name.charCodeAt(i) + ((hash << 5) - hash);
-  }
-  const hue = ((hash % 360) + 360) % 360;
-  return {
-    effective_minute: {
-      label: 'Aktivitas',
-      colors: {
-        light: [`hsl(${hue}, 70%, 40%)`],
-        dark: [`hsl(${hue}, 70%, 40%)`],
-      },
-    },
-    working_minute: {
-      label: 'Waktu Kerja',
-      colors: {
-        light: [`hsl(${hue}, 70%, 60%)`],
-        dark: [`hsl(${hue}, 70%, 60%)`],
-      },
-    },
-  };
-};
-
-const EmptyChartItem = () => {
-  return (
-    <Empty>
-      <EmptyHeader>
-        <EmptyMedia variant="icon">
-          <BanIcon />
-        </EmptyMedia>
-        <EmptyTitle>Tidak Ada Aktivitas</EmptyTitle>
-      </EmptyHeader>
-    </Empty>
-  );
+    label: 'Waktu kerja',
+    colors: { light: ['var(--chart-4)'], dark: ['var(--chart-4)'] },
+  },
 };
 
 const BarChartCard = ({
   data,
 }: {
-  data:
-    | {
-        max_minute: number;
-        charts: ChartData[];
-      }
-    | undefined;
+  data: { charts: ChartData[]; max_minute: number } | undefined;
 }) => {
-  const maxMinute = data?.max_minute || 2 * 60;
-  const ticks = Array.from({ length: 5 }).map((_, i) => (i * maxMinute) / 4);
+  const byDate = new Map<
+    string,
+    { date: string; effective_minute: number; working_minute: number }
+  >();
+
+  for (const user of data?.charts ?? []) {
+    for (const day of user.chart_data) {
+      const total = byDate.get(day.date) ?? {
+        date: day.date,
+        effective_minute: 0,
+        working_minute: 0,
+      };
+      total.effective_minute += day.effective_minute;
+      total.working_minute += day.working_minute;
+      byDate.set(day.date, total);
+    }
+  }
+
+  const chartData = [...byDate.values()].sort((a, b) =>
+    a.date.localeCompare(b.date),
+  );
 
   return (
-    <Card>
+    <Card className="min-w-0">
       <CardHeader>
-        <CardTitle>Lama Aktivitas vs Lama Bekerja</CardTitle>
+        <CardTitle>Tren aktivitas & waktu kerja</CardTitle>
         <CardDescription>
-          Perbandingan lama aktivitas dengan lama bekerja.
+          Total durasi harian seluruh PIC pada periode terpilih.
         </CardDescription>
       </CardHeader>
-      <CardContent className="flex-1 space-y-4">
-        {!data?.charts || data.charts.length === 0 ? (
-          <EmptyChartItem />
+      <CardContent>
+        {chartData.length === 0 ? (
+          <Empty>
+            <EmptyHeader>
+              <EmptyTitle>Belum ada data waktu</EmptyTitle>
+            </EmptyHeader>
+          </Empty>
         ) : (
-          data.charts.map(({ id, full_name, chart_data }) => {
-            const chartConfig = getChartConfig(full_name);
-            return (
-              <div key={id} className="space-y-2">
-                <h2 className="font-semibold tracking-tight">{full_name}</h2>
-                <EvilBarChart
-                  data={chart_data}
-                  config={chartConfig}
-                  className="size-full max-h-100 p-4"
-                  barRadius={4}
-                  chartProps={{ maxBarSize: 100 }}
-                >
-                  <EvilBarChart.Grid />
-                  <EvilBarChart.Legend />
-                  <EvilBarChart.XAxis
-                    dataKey="date"
-                    tickFormatter={(value: string) => {
-                      const date = new Date(value);
-                      return date.toLocaleDateString('id', {
-                        month: 'short',
-                        day: 'numeric',
-                      });
-                    }}
-                    tick={{
-                      fontSize: 10,
-                    }}
-                  />
-                  <EvilBarChart.YAxis
-                    ticks={ticks}
-                    tickFormatter={(value: number) => formatDuration(value)}
-                    tick={{
-                      style: { fontVariantNumeric: 'tabular-nums' },
-                      fontSize: 10,
-                    }}
-                  />
-                  <EvilBarChart.Tooltip />
-                  <EvilBarChart.Bar
-                    dataKey="effective_minute"
-                    variant="default"
-                  />
-                  <EvilBarChart.Bar
-                    dataKey="working_minute"
-                    variant="default"
-                  />
-                </EvilBarChart>
-              </div>
-            );
-          })
+          <EvilBarChart
+            data={chartData}
+            config={chartConfig}
+            className="h-72 w-full"
+            animationType="none"
+            barRadius={3}
+          >
+            <EvilBarChart.Grid />
+            <EvilBarChart.Legend />
+            <EvilBarChart.XAxis
+              dataKey="date"
+              tickFormatter={(value: string) =>
+                new Date(`${value}T00:00:00`).toLocaleDateString('id-ID', {
+                  day: 'numeric',
+                  month: 'short',
+                })
+              }
+            />
+            <EvilBarChart.YAxis
+              tickFormatter={(value: number) => formatDuration(value)}
+            />
+            <EvilBarChart.Tooltip />
+            <EvilBarChart.Bar dataKey="effective_minute" />
+            <EvilBarChart.Bar dataKey="working_minute" />
+          </EvilBarChart>
         )}
       </CardContent>
     </Card>
