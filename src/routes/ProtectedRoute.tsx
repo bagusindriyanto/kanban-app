@@ -1,17 +1,15 @@
 import { Navigate, Outlet } from 'react-router';
 import useAuthStore from '@/stores/authStore';
-import FullPageLoader from '@/components/shared/FullPageLoader';
+import AppLoader from '@/components/shared/AppLoader';
 
 const ProtectedRoute = () => {
   const { session, isInitialized } = useAuthStore();
 
-  if (!isInitialized) return <FullPageLoader />;
-  if (!session) return <Navigate to="/login" replace />;
-  // if (allowedRoles && !allowedRoles.includes(currentUser.role.name)) {
-  //   return <Navigate to="/unauthorized" replace />;
-  // }
-
-  return <Outlet />;
+  return (
+    <AppLoader isLoading={!isInitialized}>
+      {session ? <Outlet /> : <Navigate to="/login" replace />}
+    </AppLoader>
+  );
 };
 
 export default ProtectedRoute;
