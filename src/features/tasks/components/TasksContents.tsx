@@ -1,4 +1,4 @@
-import { Spinner } from '@/components/ui/spinner';
+import TasksContentsLoader from './TasksContentsLoader';
 import OfflineScreen from '@/components/shared/OfflineScreen';
 import ErrorScreen from '@/components/shared/ErrorScreen';
 import EmptyScreen from '@/components/shared/EmptyScreen';
@@ -58,49 +58,42 @@ const TasksContents = ({
     updateTaskMutate(data);
   };
 
-  if (isLoading) {
-    return (
-      <div className="flex flex-1 justify-center items-center">
-        <Spinner className="size-10" />
-      </div>
+  const content =
+    !isOnline && !tasks ? (
+      <OfflineScreen />
+    ) : error && !tasks ? (
+      <ErrorScreen errorMessage={error.message} />
+    ) : !tasks || tasks.length === 0 ? (
+      <EmptyScreen />
+    ) : (
+      <DragDropProvider onDragEnd={handleDragEnd}>
+        <div className="flex overflow-x-auto overflow-y-hidden flex-1 gap-4 pb-4 mx-4 min-w-0 min-h-0 max-sm:snap-x max-sm:snap-mandatory">
+          {columns.map((column) => (
+            <StatusColumn
+              key={column.id}
+              columnId={column.id}
+              title={column.title}
+              tasks={tasks.filter((task) => task.status === column.id)}
+            />
+          ))}
+          <BoardStatsColumn tasks={tasks} />
+        </div>
+        <DragOverlay>
+          {(source) => {
+            const task = source?.data as TaskWithProfile | undefined;
+            if (!task) return null;
+            return (
+              <TaskCard task={task} className="opacity-100 scale-105 rotate-1" />
+            );
+          }}
+        </DragOverlay>
+      </DragDropProvider>
     );
-  }
-
-  if (!isOnline && !tasks) {
-    return <OfflineScreen />;
-  }
-
-  if (error && !tasks) {
-    return <ErrorScreen errorMessage={error.message} />;
-  }
-
-  if (!tasks || tasks.length === 0) {
-    return <EmptyScreen />;
-  }
 
   return (
-    <DragDropProvider onDragEnd={handleDragEnd}>
-      <div className="flex overflow-x-auto overflow-y-hidden flex-1 gap-4 pb-4 mx-4 min-w-0 min-h-0 max-sm:snap-x max-sm:snap-mandatory">
-        {columns.map((column) => (
-          <StatusColumn
-            key={column.id}
-            columnId={column.id}
-            title={column.title}
-            tasks={tasks.filter((task) => task.status === column.id)}
-          />
-        ))}
-        <BoardStatsColumn tasks={tasks} />
-      </div>
-      <DragOverlay>
-        {(source) => {
-          const task = source?.data as TaskWithProfile | undefined;
-          if (!task) return null;
-          return (
-            <TaskCard task={task} className="opacity-100 scale-105 rotate-1" />
-          );
-        }}
-      </DragOverlay>
-    </DragDropProvider>
+    <TasksContentsLoader isLoading={isLoading}>
+      {content}
+    </TasksContentsLoader>
   );
 };
 
