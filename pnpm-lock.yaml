@@ -151,7 +151,7 @@ importers:
         specifier: ^17.6.0
         version: 17.12.0
       shadcn:
-        specifier: ^4.18.0
+        specifier: ^4.21.0
         version: 4.21.0(typescript@6.0.3)
       tw-animate-css:
         specifier: ^1.4.0
