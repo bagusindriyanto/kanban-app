@@ -21,21 +21,12 @@ import {
 } from '@/components/ui/empty';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { useDeadlineChecker } from '@/features/upcoming-tasks/hooks/useDeadlineChecker';
-import { useFetchUpcomingTasks } from '../api/fetchUpcomingTasks';
+import { UPCOMING_WINDOW_MINUTES } from '../constants';
+import { useUpcomingTasks } from '../hooks/useUpcomingTasks';
 import UpcomingTaskCard from './UpcomingTaskCard';
 
 const UpcomingTasksPanel = () => {
-  const { data: upcomingTasks = [] } = useFetchUpcomingTasks();
-
-  const visibleTasks = upcomingTasks.filter((task) => {
-    if (!task.scheduled_at) return false;
-    const diffInMinutes =
-      (new Date(task.scheduled_at).getTime() - new Date().getTime()) / 60000;
-    return diffInMinutes > 0 && diffInMinutes <= 30;
-  });
-
-  useDeadlineChecker(upcomingTasks);
+  const visibleTasks = useUpcomingTasks();
 
   return (
     <Sheet>
@@ -63,7 +54,8 @@ const UpcomingTasksPanel = () => {
         <SheetHeader>
           <SheetTitle>Task yang Akan Dimulai</SheetTitle>
           <SheetDescription>
-            Menampilkan task yang akan dimulai dalam 30 menit ke depan.
+            Menampilkan task yang akan dimulai dalam {UPCOMING_WINDOW_MINUTES}{' '}
+            menit ke depan.
           </SheetDescription>
         </SheetHeader>
         {visibleTasks.length > 0 ? (

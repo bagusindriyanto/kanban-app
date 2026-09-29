@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { Outlet, useMatches } from 'react-router';
+import useNotificationStore from '@/stores/notificationStore';
 
 type RouteHandle = {
   title?: string;
@@ -7,15 +8,16 @@ type RouteHandle = {
 
 const AppTitle = () => {
   const matches = useMatches();
+  const upcomingCount = useNotificationStore((state) => state.upcomingCount);
 
   useEffect(() => {
     const currentRoute = [...matches]
       .reverse()
       .find((match) => (match.handle as RouteHandle)?.title);
 
-    document.title =
-      (currentRoute?.handle as RouteHandle)?.title ?? 'Kanban App';
-  }, [matches]);
+    const title = (currentRoute?.handle as RouteHandle)?.title ?? 'Kanban App';
+    document.title = upcomingCount > 0 ? `(${upcomingCount}) ${title}` : title;
+  }, [matches, upcomingCount]);
 
   return <Outlet />;
 };
