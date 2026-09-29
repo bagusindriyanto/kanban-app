@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { Outlet, useMatches } from 'react-router';
+import { setFaviconBadge } from '@/features/upcoming-tasks/lib/faviconBadge';
 import useNotificationStore from '@/stores/notificationStore';
 
 type RouteHandle = {
@@ -18,6 +19,8 @@ const AppTitle = () => {
     const title = (currentRoute?.handle as RouteHandle)?.title ?? 'Kanban App';
     document.title = upcomingCount > 0 ? `(${upcomingCount}) ${title}` : title;
   }, [matches, upcomingCount]);
+
+  useEffect(() => setFaviconBadge(upcomingCount), [upcomingCount]);
 
   return <Outlet />;
 };
