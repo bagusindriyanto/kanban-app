@@ -7,7 +7,7 @@ import useAuthStore from '@/stores/authStore';
 import TextareaField from '@/components/shared/form/TextareaField';
 import SwitchField from '@/components/shared/form/SwitchField';
 import DateTimeField from '@/components/shared/form/DateTimeField';
-import ComboboxField from '@/components/shared/form/ComboboxField';
+import MultiComboboxField from '@/components/shared/form/MultiComboboxField';
 import { useAddTask } from '@/features/tasks/api/addTask';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
@@ -43,7 +43,7 @@ const AddTaskForm = ({
     resolver: zodResolver(formSchema),
     defaultValues: {
       content: '',
-      user_id: null,
+      user_ids: [],
       detail: '',
       is_scheduled: defaultScheduled,
       is_assigned: false,
@@ -61,7 +61,7 @@ const AddTaskForm = ({
 
     const payload = {
       ...data,
-      user_id: isAssigned ? data.user_id : currentUser.id,
+      user_ids: isAssigned ? data.user_ids : [currentUser.id],
       assigner_id: isAssigned ? currentUser.id : null,
     };
 
@@ -114,8 +114,8 @@ const AddTaskForm = ({
               className="mt-6"
             />
             {/* PIC Combo Box */}
-            <ComboboxField
-              name="user_id"
+            <MultiComboboxField
+              name="user_ids"
               control={form.control}
               label="Tugaskan ke"
               required={isAssigned}
