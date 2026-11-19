@@ -24,3 +24,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# OpenCode local secrets
+.opencode/supabase-auth.json
